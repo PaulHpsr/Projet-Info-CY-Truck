@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Fonction pour afficher l'aide
-show_help() {
+show_h() {
     echo "Usage: $0 -f <chemin_fichier_csv> -o <option_traitement>"
     echo "  -f : Chemin du fichier CSV à traiter."
     echo "  -o : Option de traitement (-d1, -d2, -l, -t, -s)."
@@ -43,6 +43,9 @@ if [ -z "$chemin_csv" ] || [ -z "$option_traitement" ]; then
     show_help
 fi
 
+# Mesurer le temps d'exécution avec la commande time
+time ./votre_programme_c -c "$chemin_csv" -o "resultats_option_$option_traitement.txt"
+
 # Exécuter le programme C en fonction de l'option de traitement choisie
 case $option_traitement in
     -d1)
@@ -60,7 +63,7 @@ case $option_traitement in
     -s)
         ./programme_c -c "$chemin_csv" -o resultats_option_s.txt
         ;;
-    *)
+    -h)
         echo "Option de traitement invalide. Les choix valides sont -d1, -d2, -l, -t, -s."
         show_help
         ;;
