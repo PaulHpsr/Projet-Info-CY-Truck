@@ -1,8 +1,10 @@
 #!/bin/bash
 
+make -C progc #Indique au make de rechercher le makefile dans progc
+
 # Fonction pour afficher l'aide
-show_h() {
-    echo "Usage: $0 -f <chemin_fichier_csv> -o <option_traitement>"
+show_help() {
+    echo "Utilisation: $0 -f <chemin_fichier_csv> -o <option_traitement>"
     echo "  -f : Chemin du fichier CSV à traiter."
     echo "  -o : Option de traitement (-d1, -d2, -l, -t, -s)."
     exit 1
@@ -49,19 +51,19 @@ time ./votre_programme_c -c "$chemin_csv" -o "resultats_option_$option_traitemen
 # Exécuter le programme C en fonction de l'option de traitement choisie
 case $option_traitement in
     -d1)
-        ./programme_c -c "$chemin_csv" -o resultats_option_d1.txt
+        ./programme_c -f "$chemin_csv" -o resultats_option_d1.txt
         ;;
     -d2)
-        ./programme_c -c "$chemin_csv" -o resultats_option_d2.txt
+        ./programme_c -f "$chemin_csv" -o resultats_option_d2.txt
         ;;
     -l)
-        ./programme_c -c "$chemin_csv" -o resultats_option_l.txt
+        ./programme_c -f "$chemin_csv" -o resultats_option_l.txt
         ;;
     -t)
-        ./programme_c -c "$chemin_csv" -o resultats_option_t.txt
+        ./programme_c -f "$chemin_csv" -o resultats_option_t.txt
         ;;
     -s)
-        ./programme_c -c "$chemin_csv" -o resultats_option_s.txt
+        ./programme_c -f "$chemin_csv" -o resultats_option_s.txt
         ;;
     -h)
         echo "Option de traitement invalide. Les choix valides sont -d1, -d2, -l, -t, -s."
