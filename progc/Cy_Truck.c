@@ -21,15 +21,15 @@ int main(int argc, char *argv[]) {
     // Traitement des options
 
   if (strcmp(option, "-d1") == 0) {
-      traitement_d1();
+      traitement_d1(fichier);
   } else if (strcmp(option, "-d2") == 0) {
-      traitement_d2();
+      traitement_d2(fichier);
   } else if (strcmp(option, "-l") == 0) {
-      traitement_l();
+      traitement_l(fichier);
   } else if (strcmp(option, "-t") == 0) {
-      traitement_t();
+      traitement_t(fichier);
   } else if (strcmp(option, "-s") == 0) {
-      traitement_s();
+      traitement_s(fichier);
   } else {
       fprintf(stderr, "Option invalide : %s\n", option);
       return 1;
