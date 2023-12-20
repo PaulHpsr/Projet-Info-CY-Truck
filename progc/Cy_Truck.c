@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "header.h"
-#include "header.c"
+#include "Outils_AVL.h"
+#include "Traitements.h"
 
 
 int main(int argc, char *argv[]) {
