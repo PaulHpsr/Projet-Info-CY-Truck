@@ -1,5 +1,5 @@
-#ifndef __HEADER__H__
-#define __HEADER__H__
+#ifndef __Outils_AVL__H__
+#define __Outils_AVL__H__
 
 //AVL
 // Struct Arbre
@@ -21,18 +21,6 @@ Arbre* rotationDroite();
 Arbre* rotationDoubleGauche();
 Arbre* rotationDoubleDroit();
 Arbre* equilibrageAVL();
-
-
-
-//
-
-//Fonct°
-void traitement_d1();
-void traitement_d2();
-void traitement_l();
-void traitement_t();
-void traitement_s();
-
 
 
 #endif
