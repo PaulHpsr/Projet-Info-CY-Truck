@@ -2,14 +2,18 @@
 
 make -C progc #Indique au make de rechercher le makefile dans progc
 
-dossier = "progc"
-fichiers = ("Cy_Truck.c" "Makefile" "Outils_AVL.h" "Traitements.c" "Traitements.h" "outils_AVL.c")
+dossier="progc"
+dossier2="data"
+fichiers=("Cy_Truck.c" "Makefile" "Outils_AVL.h" "Traitements.c" "Traitements.h" "outils_AVL.c")
+fichier2="data.csv"
 
+# Existence fichiers de progc ?
 for fichier in "${fichiers[@]}"; do
-    chemin = "$dossier/$fichier"
-    if [-e "$chemin"]; then
+    chemin="$dossier/$fichier"
+    if [ -e "$chemin" ]; then
         echo "Le fichier $chemin existe."
-        if gcc -o "${fichiers$.c}" "$chemin"; then
+        # Retrait du ".c" pour un nom d'éxécutable correct (compilation avec gcc)
+        if gcc -o "${fichier%.c}" "$chemin"; then
             echo "Compilation réussie pour $fichier"
         else
             echo "Échec de la compilation pour $fichier"
@@ -18,6 +22,14 @@ for fichier in "${fichiers[@]}"; do
         echo "Le fichier $chemin n'existe pas."
     fi
 done
+
+# Existence fichier data ?
+chemin2="$dossier2/$fichier2"
+if [ -e "$dossier2" ]; then
+    echo "Le fichier $fichier2 existe."
+else
+    echo "Le fichier $fichier2 n'existe pas."
+fi
 
 # Fonction pour afficher l'aide
 show_help() {
