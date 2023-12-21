@@ -2,6 +2,23 @@
 
 make -C progc #Indique au make de rechercher le makefile dans progc
 
+dossier = "progc"
+fichiers = ("Cy_Truck.c" "Makefile" "Outils_AVL.h" "Traitements.c" "Traitements.h" "outils_AVL.c")
+
+for fichier in "${fichiers[@]}"; do
+    chemin = "$dossier/$fichier"
+    if [-e "$chemin"]; then
+        echo "Le fichier $chemin existe."
+        if gcc -o "${fichiers$.c}" "$chemin"; then
+            echo "Compilation réussie pour $fichier"
+        else
+            echo "Échec de la compilation pour $fichier"
+        fi
+    else    
+        echo "Le fichier $chemin n'existe pas."
+    fi
+done
+
 # Fonction pour afficher l'aide
 show_help() {
     echo "Utilisation: $0 -f <chemin_fichier_csv> -o <option_traitement>"
