@@ -74,6 +74,9 @@ fi
 # Exitence dossier temp ?
 if [ -d "$dossier4" ]; then
     echo "Le dossier \ $dossier4 existe"
+    # Vider le contenu du dossier temp
+    rm -r "$dossier4"/* #Uniquement les fichier + sous dossier
+    echo "Le dossier \ $dossier4 \ a été vidé"
 else
     mkdir "$dossier4"
     echo "Le dossier \ $dossier4 \ n'existait pas mais a été crée"
