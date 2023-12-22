@@ -192,7 +192,83 @@ do
       exit 0
     fi
 }
-
 #-------------------------------------------------------------------------
 
 
+
+#------------------------------ GnuPlot ------------------------------
+
+traitement_gnuplot_d1()
+{
+#Format du txt : Conducteur 1 valeur_trajet
+#Trie le fichier decroissant
+
+# Script Gnuplot
+sort -k2 -r "$script_dir/$dossier3/data_d1.txt" | gnuplot << EOF #Bloc pour envoyer plusieurs comandes à Gnuplot
+set terminal pngcairo enhanced font "arial,10" size 800,600 #Def. le terminal de sortie en .png en 800x600p
+set output "$script_dir/$dossier3/histogramme_d1.png" #Def. le fichier de sortie
+
+# Paramètres du graphique
+set style fill solid
+set boxwidth 0.8 relative
+set yrange [0:*]
+set xlabel "Nombre de trajets"
+set ylabel "DRIVER NAMES"
+set title "Option -d1 : NB routes = f(Driver)"
+
+# Tracer l'histogramme horizontal
+plot 'data_d1.txt' using 2:yticlabels(1) with boxes title "Nombre de trajets" #Utilise les données du txt pour histo horizontal
+EOF
+
+}
+
+traitement_gnuplot_d2()
+{
+#Format du txt : Conducteur 1 valeur_distance
+#Trie le fichier decroissant
+
+# Script Gnuplot
+sort -k2 -r "$script_dir/$dossier3/data_d2.txt" | gnuplot << EOF #Bloc pour envoyer plusieurs comandes à Gnuplot
+set terminal pngcairo enhanced font "arial,10" size 800,600 #Def. le terminal de sortie en .png en 800x600p
+set output "$script_dir/$dossier3/histogramme_d2.png" #Def. le fichier de sortie
+
+# Paramètres du graphique
+set style fill solid
+set boxwidth 0.8 relative
+set yrange [0:*]
+set xlabel "DISTANCE (Km)"
+set ylabel "DRIVER NAMES"
+set title "Option -d2 : Distance = f(Driver)"
+
+# Tracer l'histogramme horizontal
+plot 'data_d2.txt' using 2:yticlabels(1) with boxes title "Nombre de trajets" #Utilise les données du txt pour histo horizontal
+EOF
+
+}
+
+traitement_gnuplot_l()
+{
+#Format du txt : ID valeur_distance
+#Trie le fichier decroissant
+
+# Script Gnuplot
+sort -k1 -r "$script_dir/$dossier3/data_l.txt" | gnuplot << EOF #Bloc pour envoyer plusieurs comandes à Gnuplot
+set terminal pngcairo enhanced font "arial,10" size 800,600 #Def. le terminal de sortie en .png en 800x600p
+set output "$script_dir/$dossier3/histogramme_l.png" #Def. le fichier de sortie
+
+# Paramètres du graphique
+set style fill solid
+set boxwidth 0.8 relative
+set yrange [0:*]
+set xlabel "ROUTE ID"
+set ylabel "DISTANCE (Km)"
+set title "Option -l : Distance = f(Driver)"
+
+# Tracer l'histogramme verticale
+plot 'data_l.txt' using 2:xticlabels(1) with boxes title "Nombre de trajets" #Utilise les données du txt pour histo verticale
+EOF
+
+}
+
+
+#-------------------------------------------------------------------------
