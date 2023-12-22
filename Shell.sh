@@ -4,6 +4,8 @@ make -C progc #Indique au make de rechercher le makefile dans progc
 
 dossier="progc"
 dossier2="data"
+dossier3="images"
+dossier4="temp"
 fichiers=("Cy_Truck.c" "Makefile" "Outils_AVL.h" "Traitements.c" "Traitements.h" "outils_AVL.c")
 fichier2="data.csv"
 
@@ -29,6 +31,22 @@ if [ -e "$dossier2" ]; then
     echo "Le fichier $fichier2 existe."
 else
     echo "Le fichier $fichier2 n'existe pas."
+fi
+
+# Exitence dossier images ?
+if [ -d "$dossier3" ]; then
+    echo "Le dossier \"$dossier"\ existe"
+else
+    mkdir "$dossier"
+    echo "Le dossier \"$dossier"\ n'existait pas mais a été crée"
+fi
+
+# Exitence dossier temp ?
+if [ -d "$dossier4" ]; then
+    echo "Le dossier \"$dossier4"\ existe"
+else
+    mkdir "$dossier4"
+    echo "Le dossier \"$dossier4"\ n'existait pas mais a été crée"
 fi
 
 # Fonction pour afficher l'aide
