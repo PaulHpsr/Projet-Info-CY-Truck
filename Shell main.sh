@@ -37,7 +37,7 @@ existance_executable()
 
   if [ -e "$script_dir/$dossier/$executable" ]; then
     echo "L'éxécutable: $executable existe."
-    "$script_dir/$dossier/$executable"
+    time "$script_dir/$dossier/$executable" "$chemin_csv" "$option_traitement"
   else
     echo "Impossible de compiler l'éxécutable après $tentatives_max tentatives."
   fi
