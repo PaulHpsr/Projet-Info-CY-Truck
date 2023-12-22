@@ -19,22 +19,37 @@ dossier="progc"
 dossier2="data"
 dossier3="images"
 dossier4="temp"
+executable="Cy_Truck"
 fichiers=("Cy_Truck.c" "Makefile" "Outils_AVL.h" "Traitements.c" "Traitements.h" "outils_AVL.c")
 fichier2="data.csv"
 
-existance_dossier
+existance_executable()
+{
+  tentatives_max=3
+  tentatives=0
+
+  while [ ! -e "$script_dir/$dossier/$executable" ] && [ "$tentatives" -lt "$tentatives_max" ]; do
+    ((tentatives++))
+    echo "L'éxécutable: $executable n'existe pas. Tentative $tentatives de $tentatives_max."
+    echo "Compilation en cours...."
+    compiler_c
+  done
+
+  if [ -e "$script_dir/$dossier/$executable" ]; then
+    echo "L'éxécutable: $executable existe."
+    "$script_dir/$dossier/$executable"
+  else
+    echo "Impossible de compiler l'éxécutable après $tentatives_max tentatives."
+  fi
+}
+
+existance_dossier()
 {
 # Existence fichiers de progc ?
 for fichier in "${fichiers[@]}"; do
-    chemin="$dossier/$fichier"
+    chemin="$script_dir/$dossier/$fichier"
     if [ -e "$chemin" ]; then
         echo "Le fichier $chemin existe."
-        # Retrait du ".c" pour un nom d'éxécutable correct (compilation avec gcc)
-        if gcc -o "${fichier%.c}" "$chemin"; then
-            echo "Compilation réussie pour $fichier"
-        else
-            echo "Échec de la compilation pour $fichier"
-        fi
     else    
         echo "Le fichier $chemin n'existe pas."
     fi
@@ -50,18 +65,18 @@ fi
 
 # Exitence dossier images ?
 if [ -d "$dossier3" ]; then
-    echo "Le dossier \"$dossier"\ existe"
+    echo "Le dossier \ $dossier \ existe"
 else
     mkdir "$dossier"
-    echo "Le dossier \"$dossier"\ n'existait pas mais a été crée"
+    echo "Le dossier \ $dossier \ n'existait pas mais a été crée"
 fi
 
 # Exitence dossier temp ?
 if [ -d "$dossier4" ]; then
-    echo "Le dossier \"$dossier4"\ existe"
+    echo "Le dossier \ $dossier4 existe"
 else
     mkdir "$dossier4"
-    echo "Le dossier \"$dossier4"\ n'existait pas mais a été crée"
+    echo "Le dossier \ $dossier4 \ n'existait pas mais a été crée"
 fi
 }
 
@@ -91,13 +106,13 @@ show_help()
 }
 
 
-compiler_c
+compiler_c ()
 {
-make -C $script_dir/Cy_Truck/progc #Indique au make de rechercher le makefile dans progc
+make -C $script_dir/progc #Indique au make de rechercher le makefile dans progc
 }
 
 
-obtention_utilisation
+obtention_utilisation ()
 {
 #Demander à l'utilisateur de saisir une commande
 while[ "$commande" -ne 4 ]; do         
@@ -156,7 +171,7 @@ done
 }
 
 
-verif_option_traitement
+verif_option_traitement ()
 {
 
 #Vérifier si l'utilisateur a saisi une option valide
