@@ -5,7 +5,7 @@
 # Répertoire contenant le script en cours d'éxécution
 script_dir=$(dirname "$0")
 
-commande=""    #pour utiliser "read" -> permet à l'utilisateur de saisir une commande
+commande=()    #pour utiliser "read" -> permet à l'utilisateur de saisir une commande
 
 nom_csv=""
 
@@ -29,18 +29,18 @@ existance_executable()
   tentatives_max=3
   tentatives=0
 
-  while [ ! -e "$script_dir/$dossier/$executable" ] && [ "$tentatives" -lt "$tentatives_max" ]; do
+  while [ ! -e "$script_dir/$dossier/$executable" ] && [ "$tentatives" -lt "$tentatives_max" ]; do  #Le programme va tenter de compiler tant que l'exec n'existe pas -> max 3x
     ((tentatives++))
-    echo "L'éxécutable: $executable n'existe pas. Tentative $tentatives de $tentatives_max."
-    echo "Compilation en cours...."
+    echo "L'éxécutable: $executable n'existe pas. Tentative $tentatives sur $tentatives_max."$'\n'
+    echo "Compilation en cours...."$'\n'
     compiler_c
   done
 
   if [ -e "$script_dir/$dossier/$executable" ]; then
-    echo "L'éxécutable: $executable existe."
-    return 0
+    echo "L'éxécutable: $executable existe."$'\n'
+    return 0                                                                                  #Afin de récupérer la valeur de retour de la fonction plus tard dans le "Main"
   else
-    echo "Impossible de compiler l'éxécutable après $tentatives_max tentatives."
+    echo "Impossible de compiler l'éxécutable après $tentatives_max tentatives."$'\n'        
     return 1
   fi
 }
@@ -48,13 +48,13 @@ existance_executable()
 existance_dossier()
 {
 # Existence fichiers de progc ?
-for fichier in "${fichiers[@]}"; do
+for fichier in "${fichiers[@]}"; do                  #Va vérifier dans le dossier progc si chacuns des fichiers sont présent
     chemin="$script_dir/$dossier/$fichier"
     if [ -e "$chemin" ]; then
-        echo "Le fichier $chemin existe."
+        echo "Le fichier $chemin existe."$'\n'
     else    
-        echo "Le fichier $chemin n'existe pas."
-        echo "Veuiller corriger l'erreur puis relancer...."
+        echo "Le fichier $chemin n'existe pas."$'\n'
+        echo "Veuiller corriger l'erreur puis relancer...."$'\n'
         return 1
     fi
 done
@@ -62,30 +62,30 @@ done
 # Existence fichier data ?
 chemin2="$script_dir/$dossier2/$fichier2"
 if [ -e "$chemin2" ]; then
-    echo "Le fichier $fichier2 existe."
+    echo "Le fichier $fichier2 existe."$'\n'
 else
-    echo "Le fichier $fichier2 n'existe pas."
-    echo "Veuiller corriger l'erreur puis relancer...."
+    echo "Le fichier $fichier2 n'existe pas."$'\n'
+    echo "Veuiller corriger l'erreur puis relancer...."$'\n'
     return 1
 fi
 
 # Exitence dossier images ?
 if [ -d "$dossier3" ]; then
-    echo "Le dossier \ $dossier \ existe"
+    echo "Le dossier \ $dossier \ existe"$'\n'
 else
-    mkdir "$dossier"
-    echo "Le dossier \ $dossier \ n'existait pas mais a été crée"
+    mkdir "$script_dir/$dossier3"                                                                           #Créer le dossier s'il est inexistant
+    echo "Le dossier \ $dossier \ n'existait pas mais a été crée"$'\n'
 fi
 
 # Exitence dossier temp ?
 if [ -d "$dossier4" ]; then
-    echo "Le dossier \ $dossier4 existe"
+    echo "Le dossier \ $dossier4 existe"$'\n'
     # Vider le contenu du dossier temp
     rm -r "$dossier4"/* #Uniquement les fichier + sous dossier
-    echo "Le dossier \ $dossier4 \ a été vidé"
+    echo "Le dossier \ $dossier4 \ a été vidé"$'\n'
 else
-    mkdir "$dossier4"
-    echo "Le dossier \ $dossier4 \ n'existait pas mais a été crée"
+    mkdir "$script_dir/$dossier4"
+    echo "Le dossier \ $dossier4 \ n'existait pas mais a été crée"$'\n'
 fi
 }
 
@@ -124,10 +124,12 @@ make -C $script_dir/progc #Indique au make de rechercher le makefile dans progc
 obtention_utilisation ()
 {
 #Demander à l'utilisateur de saisir une commande
-while[ "$commande" -ne 4 ]; do         
-  echo show_help
+#Tant qu'il y a - de 4 éléments dans la commande
+while[ "${#commande[@]}" -lt 4 ]; do    
+  commande=()   #On réinitialise la valeur de commande
+  show_help
   echo "Entrer une commande :"$'\n'
-  read -r commande
+  read -r commande  #On lis l'entrée utilisateur
 done
 
 while getopts ":f:o:" opt; do
@@ -139,24 +141,28 @@ while getopts ":f:o:" opt; do
             option_traitement+=("$OPTARG")
             ;;
         \?)
-            echo "Option invalide: -$OPTARG" >&2
+            echo "Option invalide: -$OPTARG"$'\n' >&2
             show_help
             ;;
         :)
-            echo "L'option -$OPTARG requiert un argument." >&2
+            echo "L'option -$OPTARG requiert un argument."$'\n' >&2
             show_help
             ;;
     esac
 done
+
+#Si les options ne sont pas valides, réitérer le processus d'obtiention de la commande
 while [ "$(verif_option_traitement)" -ne 0 ]; do # -ne pour comparer des valeurs numériques (au lieu de != 0)
-  echo "Les options ne sont pas valides"
-  commande=""  # Réinitialiser la commande pour relancer la saisie
+  echo "Les options ne sont pas valides"$'\n'
+  commande=()  # Réinitialiser la commande pour relancer la saisie
   option_traitement=()  # Réinitialiser les options pour une nouvelle saisie
-  while [ "$commande" -ne 4 ]; do
-   show_help
-    echo "Entrer une commande :"
-    read -r commande
-  done
+  
+while[ "${#commande[@]}" -lt 4 ]; do    
+  commande=()   #On réinitialise la valeur de commande
+  show_help
+  echo "Entrer une commande :"$'\n'
+  read -r commande  #On lis l'entrée utilisateur
+done
 
   while getopts ":f:o:" opt; do
     case $opt in
@@ -167,11 +173,11 @@ while [ "$(verif_option_traitement)" -ne 0 ]; do # -ne pour comparer des valeurs
        option_traitement+=("$OPTARG")
        ;;
       \?)
-       echo "Option invalide: -$OPTARG" >&2
+       echo "Option invalide: -$OPTARG"$'\n' >&2
         show_help
         ;;
      :)
-       echo "L'option -$OPTARG requiert un argument." >&2
+       echo "L'option -$OPTARG requiert un argument."$'\n' >&2
         show_help
        ;;
    esac
@@ -184,7 +190,7 @@ verif_option_traitement ()
 {
 
 #Vérifier si l'utilisateur a saisi une option valide
-for i in "${option_traitement[@]}"; 
+for i in "${option_traitement[@]}";           #Parcourir le tableau des options afin de vérifier si les options sont correctes
 do
     if [[ $i == "-h" ]]; then 
       show_help
@@ -202,11 +208,15 @@ done
 
 crea_histo()
 {
-for i in "${option_traitement[@]}"; 
-do
+for i in "${option_traitement[@]}";          #On va parcourir les options et effectuer le traitement associé 
+do                                           #Si commande -h on ne prend en compte que celle-ci
   if [[ $i == "-h" ]]; then 
     show_help
-  else
+    return 0
+done
+
+for i in "${option_traitement[@]}";          #On va parcourir une deuxième fois les options et effectuer le traitement associé si pas -h
+do
     case "$i" in
         -d1)
            traitement_gnuplot_d1
@@ -224,7 +234,7 @@ do
           traitement_gnuplot_s
            ;;
         \?)
-          echo "Option non reconnue : $i"
+          echo "Option non reconnue : $i"$'\n'
           show_help
           ;;
    esac
@@ -245,7 +255,7 @@ traitement_gnuplot_d1()
 # Script Gnuplot
 sort -k2,2 -r "$script_dir/temp/data_d1.txt" | gnuplot << EOF #Bloc pour envoyer plusieurs comandes à Gnuplot
 set terminal pngcairo enhanced font "arial,10" size 800,600 #Def. le terminal de sortie en .png en 800x600p
-set output "$script_dir/images/histogramme_d1.png" #Def. le fichier de sortie
+set output "$script_dir/images/histogramme_d1.png" #Def. le chemin de sortie
 
 # Paramètres du graphique
 set style fill solid
@@ -365,43 +375,45 @@ EOF
 
 #------------------------------ Main ------------------------------
 
-echo "#-----------------------------------------------#"
-echo "Bienvenue dans le Cy Truck Data Analyser"
-echo "#-----------------------------------------------#"
-show_help
-obtention_utilisation
-echo "#-----------------------------------------------#"
-echo "VERIFICATION DE L'INTEGRITE DE L'OUTIL..."
-echo "#-----------------------------------------------#"
-existance_dossier
-retour=$?
+#Ici la partie principale du programme
+
+echo "#-----------------------------------------------#"$'\n'
+echo "Bienvenue dans le Cy Truck Data Analyser"$'\n'
+echo "#-----------------------------------------------#"$'\n'
+show_help                                                          #1) Montrer l'utilisation du programme
+obtention_utilisation                                              #2) Obtenir la commande de l'utilisateur (connaitre les options + nom du fichier csv)
+echo "#-----------------------------------------------#"$'\n'
+echo "VERIFICATION DE L'INTEGRITE DE L'OUTIL..."$'\n'
+echo "#-----------------------------------------------#"$'\n'
+existance_dossier                                                  #3) Vérifier si tous les fichiers existes (maintenant que l'on peut vérifier l'existance du csv)
+retour=$?                                                            
 if [ $retour -eq 1 ]; then
-  echo "ERREUR : L'outil n'est pas complet, veuillez vérifier"
+  echo "ERREUR : L'outil n'est pas complet, veuillez vérifier"$'\n'        #Renvoyer une ERREUR et arrêter le programme si l'on des fichiers important manque -> demander à l'utilisateur de le récupérer
   exit 1
 fi
-echo "#-----------------------------------------------#"
-echo "EXECUTION DU PROGRAMME..."
-echo "#-----------------------------------------------#"
-existance_executable
+echo "#-----------------------------------------------#"$'\n'
+echo "EXECUTION DU PROGRAMME..."$'\n'
+echo "#-----------------------------------------------#"$'\n'
+existance_executable                                                #4) Vérifier si l'exécutable est déjà existant -> l'exécuter ou le compiler en fonction
 retour=$?
 if [ $retour -eq 1 ]; then
-  echo "ERREUR : Impossible de compiler le programme, veuillez vérifier"
+  echo "ERREUR : Impossible de compiler le programme, veuillez vérifier"$'\n'            #Renvoyer une ERREUR et arrêter le programme si l'on arrive pas à compiler
   exit 1
 else
-time "$script_dir/$dossier/$executable" "$chemin_csv" "$option_traitement"
+time "$script_dir/$dossier/$executable" "$chemin_csv" "$option_traitement"      #5) Exécuter le programme -> time pour obtenir le temps précis d'éxecution du C        
 fi
 
-echo "#-----------------------------------------------#"
-echo "CREATION DE L'HISTOGRAMME...."
-echo "#-----------------------------------------------#"
+echo "#-----------------------------------------------#"$'\n'
+echo "CREATION DE L'HISTOGRAMME...."$'\n'
+echo "#-----------------------------------------------#"$'\n'
 #Timer interne
 start=$(date +%s)
-crea_histo
+crea_histo                                                                       #Ici un timer moins précis puisque l'on va obtenir le temps d'exécution d'une fonc° du shell
 end=$(date +%s)
 temps=$(end - start)
-echo "Durée d'exécution: ${temps} secondes"
-echo "#-----------------------------------------------#"
-echo "LE PROGRAMME A ETE EXECUTE"
-echo "#-----------------------------------------------#"
+echo "Durée d'exécution: ${temps} secondes"$'\n'
+echo "#-----------------------------------------------#"$'\n'
+echo "LE PROGRAMME A ETE EXECUTE"$'\n'                                            #6) Fermer le programme lorsque celui-ci à finis son travail
+echo "#-----------------------------------------------#"$'\n'
 exit 0
 #-------------------------------------------------------------------------
