@@ -9,7 +9,7 @@ commande=""    #pour utiliser "read" -> permet à l'utilisateur de saisir une co
 
 nom_csv=""
 
-chemin_csv="$script_dir/Cy_Truck/data/$nom_csv.cvs"  #chemin du fichier csv
+chemin_csv="$script_dir/Cy_Truck/data/$nom_csv.csv"  #chemin du fichier csv
 
 option_traitement=()    #Tableau de char -> car plusieurs options  
 
