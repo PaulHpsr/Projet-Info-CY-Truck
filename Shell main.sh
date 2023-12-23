@@ -2,6 +2,7 @@
 
 #---------------------------- Initialisation des variables --------------------
 
+# Répertoire contenant le script en cours d'éxécution
 script_dir=$(dirname "$0")
 
 commande=""    #pour utiliser "read" -> permet à l'utilisateur de saisir une commande
