@@ -143,7 +143,7 @@ while getopts ":f:o:" opt; do
             ;;
     esac
 done
-while [ "$(verif_option_traitement)" != "0" ]; do
+while [ "$(verif_option_traitement)" -ne 0 ]; do # -ne pour comparer des valeurs numériques (au lieu de != 0)
   echo "Les options ne sont pas valides"
   commande=""  # Réinitialiser la commande pour relancer la saisie
   option_traitement=()  # Réinitialiser les options pour une nouvelle saisie
