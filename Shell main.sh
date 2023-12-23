@@ -36,6 +36,11 @@ existance_executable()
     compiler_c
   done
 
+  if [ $? -ne 0 ]; then                                                             #Revérifi si le C est bien compilé
+    echo "ERREUR : Impossible de compiler le programme, veuillez vérifier"$'\n'     #Renforcer le code afin de ne pas executer un C mal compilé
+    return 1
+  fi
+
   if [ -e "$script_dir/$dossier/$executable" ]; then
     echo "L'éxécutable: $executable existe."$'\n'
     return 0                                                                                  #Afin de récupérer la valeur de retour de la fonction plus tard dans le "Main"
@@ -125,7 +130,7 @@ obtention_utilisation ()
 {
 #Demander à l'utilisateur de saisir une commande
 #Tant qu'il y a - de 4 éléments dans la commande
-while[ "${#commande[@]}" -lt 4 ]; do    
+while [ "${#commande[@]}" -lt 4 ]; do    
   commande=()   #On réinitialise la valeur de commande
   show_help
   echo "Entrer une commande :"$'\n'
@@ -157,7 +162,7 @@ while [ "$(verif_option_traitement)" -ne 0 ]; do # -ne pour comparer des valeurs
   commande=()  # Réinitialiser la commande pour relancer la saisie
   option_traitement=()  # Réinitialiser les options pour une nouvelle saisie
   
-while[ "${#commande[@]}" -lt 4 ]; do    
+while [ "${#commande[@]}" -lt 4 ]; do    
   commande=()   #On réinitialise la valeur de commande
   show_help
   echo "Entrer une commande :"$'\n'
@@ -408,9 +413,9 @@ echo "CREATION DE L'HISTOGRAMME...."$'\n'
 echo "#-----------------------------------------------#"$'\n'
 #Timer interne
 start=$(date +%s)
-crea_histo                                                                       #Ici un timer moins précis puisque l'on va obtenir le temps d'exécution d'une fonc° du shell
+crea_histo                                                                       #Ici un timer moins précis puisque l'on va obtenir le temps d'exécution d'une fonc° du shell  (différence entre la date de début -> start et la date de fin -> end)
 end=$(date +%s)
-temps=$(end - start)
+temps=$((end - start))
 echo "Durée d'exécution: ${temps} secondes"$'\n'
 echo "#-----------------------------------------------#"$'\n'
 echo "LE PROGRAMME A ETE EXECUTE"$'\n'                                            #6) Fermer le programme lorsque celui-ci à finis son travail
