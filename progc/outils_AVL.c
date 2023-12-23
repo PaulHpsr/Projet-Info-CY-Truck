@@ -88,18 +88,15 @@ Arbre* suppMinAVL(Arbre* a, int* h, int* pe)
     a->left = suppMinAVL(a->left, h, pe);
     if(*h != 0)
     {
-      
-    }
-  }
-
-  if(*h == -0)
-  {
-    a->eq = a->eq + *h;
-    if(a->eq == 0){
-      *h = -1;
-    }
-    else{
-      *h = 0;
+      a->eq = a->eq + *h;
+      if(a->eq == 0)
+      {
+        *h = -1;
+      }
+      else
+      {
+        *h = 0;
+      }
     }
   }
   return a;
