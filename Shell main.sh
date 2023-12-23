@@ -181,7 +181,7 @@ verif_option_traitement ()
 #Vérifier si l'utilisateur a saisi une option valide
 for i in "${option_traitement[@]}"; 
 do
-    if [[ $i == "-h"]]; then 
+    if [[ $i == "-h" ]]; then 
       show_help
     fi
     if [[ $i != "-d1" && $i != "-d2" && $i != "-l" && $i != "-t" && $i != "-s" ]]; then
