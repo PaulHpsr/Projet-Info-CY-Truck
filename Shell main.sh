@@ -22,7 +22,7 @@ dossier3="images"
 dossier4="temp"
 executable="Cy_Truck"
 fichiers=("Cy_Truck.c" "Makefile" "Outils_AVL.h" "Traitements.c" "Traitements.h" "outils_AVL.c")
-fichier2="data.csv"
+fichier2="$nom_csv.csv"
 
 existance_executable()
 {
@@ -38,9 +38,10 @@ existance_executable()
 
   if [ -e "$script_dir/$dossier/$executable" ]; then
     echo "L'éxécutable: $executable existe."
-    time "$script_dir/$dossier/$executable" "$chemin_csv" "$option_traitement"
+    return 0
   else
     echo "Impossible de compiler l'éxécutable après $tentatives_max tentatives."
+    return 1
   fi
 }
 
@@ -53,6 +54,8 @@ for fichier in "${fichiers[@]}"; do
         echo "Le fichier $chemin existe."
     else    
         echo "Le fichier $chemin n'existe pas."
+        echo "Veuiller corriger l'erreur puis relancer...."
+        return 1
     fi
 done
 
@@ -62,6 +65,8 @@ if [ -e "$chemin2" ]; then
     echo "Le fichier $fichier2 existe."
 else
     echo "Le fichier $fichier2 n'existe pas."
+    echo "Veuiller corriger l'erreur puis relancer...."
+    return 1
 fi
 
 # Exitence dossier images ?
@@ -194,6 +199,38 @@ do
     fi
 done
 }
+
+crea_histo()
+{
+for i in "${option_traitement[@]}"; 
+do
+  if [[ $i == "-h" ]]; then 
+    show_help
+  else
+    case "$i" in
+        -d1)
+           traitement_gnuplot_d1
+            ;;
+       -d2)
+            traitement_gnuplot_d2
+            ;;
+        -l)
+           traitement_gnuplot_l
+           ;;
+       -t)
+           traitement_gnuplot_t
+           ;;
+       -s)
+          traitement_gnuplot_s
+           ;;
+        \?)
+          echo "Option non reconnue : $i"
+          show_help
+          ;;
+   esac
+  fi
+done
+}
 #-------------------------------------------------------------------------
 
 
@@ -323,4 +360,48 @@ plot 'data_s.txt' using 1:2:3:4 with filledcurves notitle lc rgb "skyblue", \
 EOF
 }
 
+#-------------------------------------------------------------------------
+
+
+#------------------------------ Main ------------------------------
+
+echo "#-----------------------------------------------#"
+echo "Bienvenue dans le Cy Truck Data Analyser"
+echo "#-----------------------------------------------#"
+show_help
+obtention_utilisation
+echo "#-----------------------------------------------#"
+echo "VERIFICATION DE L'INTEGRITE DE L'OUTIL..."
+echo "#-----------------------------------------------#"
+existance_dossier
+retour=$?
+if [ $retour -eq 1 ]; then
+  echo "ERREUR : L'outil n'est pas complet, veuillez vérifier"
+  exit 1
+fi
+echo "#-----------------------------------------------#"
+echo "EXECUTION DU PROGRAMME..."
+echo "#-----------------------------------------------#"
+existance_executable
+retour=$?
+if [ $retour -eq 1 ]; then
+  echo "ERREUR : Impossible de compiler le programme, veuillez vérifier"
+  exit 1
+else
+time "$script_dir/$dossier/$executable" "$chemin_csv" "$option_traitement"
+fi
+
+echo "#-----------------------------------------------#"
+echo "CREATION DE L'HISTOGRAMME...."
+echo "#-----------------------------------------------#"
+#Timer interne
+start=$(date +%s)
+crea_histo
+end=$(date +%s)
+temps=$(end - start)
+echo "Durée d'exécution: ${temps} secondes"
+echo "#-----------------------------------------------#"
+echo "LE PROGRAMME A ETE EXECUTE"
+echo "#-----------------------------------------------#"
+exit 0
 #-------------------------------------------------------------------------
