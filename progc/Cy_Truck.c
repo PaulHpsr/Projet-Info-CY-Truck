@@ -16,6 +16,7 @@ int main(int argc, char *argv[]) {
   // Récupérer les arguments dans des varr globales ?
   char *chemin_csv = argv[1]; 
   char *option_traitement = argv[2];
+  char *chemin_temp = argv[3];
   
   //Diviser les options en plusieurs tokens
   char *token = strtok(option_traitement, " "); //Ainsi on récupère les options séparées par des espaces
@@ -25,23 +26,23 @@ int main(int argc, char *argv[]) {
     {
       if(strcmp(token, "-d1") == 0)
       {
-        traitement_d1(chemin_csv);
+        traitement_d1(chemin_csv, chemin_temp);
       }
       if(strcmp(token, "-d2") == 0)
       {
-        traitement_d2(chemin_csv);
+        traitement_d2(chemin_csv, chemin_temp);
       }
       if(strcmp(token, "-l") == 0)
       {
-        traitement_l(chemin_csv);
+        traitement_l(chemin_csv, chemin_temp
       }
       if(strcmp(token, "-t") == 0)
       {
-        traitement_t(chemin_csv);
+        traitement_t(chemin_csv, chemin_temp);
       }
       if(strcmp(token, "-s") == 0)
       {
-        traitement_s(chemin_csv);
+        traitement_s(chemin_csv, chemin_temp);
       }
 
       token = strtok(NULL, " ");  //On passe au token suivant

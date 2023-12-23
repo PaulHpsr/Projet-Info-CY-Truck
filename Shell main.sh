@@ -254,7 +254,7 @@ done
 
 traitement_gnuplot_d1()
 {
-#Format du txt : Conducteur valeur_trajet
+#Format du txt : Conducteur nb_trajet
 #Trie le fichier decroissant
 
 # Script Gnuplot
@@ -274,6 +274,8 @@ set title "Option -d1 : NB routes = f(Driver)"
 plot 'data_d1.txt' using 2:yticlabels(1) with boxes title "Nombre de trajets" #Utilise les données du txt pour histo horizontal
 EOF
 
+# Vider le contenu du dossier temp
+rm -r "$dossier4"/* #Uniquement les fichier + sous dossier
 }
 
 traitement_gnuplot_d2()
@@ -298,6 +300,8 @@ set title "Option -d2 : Distance = f(Driver)"
 plot 'data_d2.txt' using 2:yticlabels(1) with boxes title "Nombre de trajets" #Utilise les données du txt pour histo horizontal
 EOF
 
+# Vider le contenu du dossier temp
+rm -r "$dossier4"/* #Uniquement les fichier + sous dossier
 }
 
 traitement_gnuplot_l()
@@ -322,6 +326,8 @@ set title "Option -l : Distance = f(Driver)"
 plot 'data_l.txt' using 2:xticlabels(1) with boxes title "Nombre de trajets" #Utilise les données du txt pour histo verticale
 EOF
 
+# Vider le contenu du dossier temp
+rm -r "$dossier4"/* #Uniquement les fichier + sous dossier
 }
 
 traitement_gnuplot_t()
@@ -345,6 +351,9 @@ set title "Option -t : Nb routes = f(Towns)"
 # Tracer l'histogramme regroupé
 plot 'data_t.txt' using 2:xticlabels(1) title "Nombre total de trajets", '' using 3 title "Nombre de départs de trajets" lc rgb "orange"
 EOF
+
+# Vider le contenu du dossier temp
+rm -r "$dossier4"/* #Uniquement les fichier + sous dossier
 }
 
 
@@ -373,6 +382,9 @@ plot 'data_s.txt' using 1:2:3:4 with filledcurves notitle lc rgb "skyblue", \
      '' using 1:2 with lines title "Minimum" lc rgb "red", \
      '' using 1:3 with lines title "Maximum" lc rgb "green"
 EOF
+
+# Vider le contenu du dossier temp
+rm -r "$dossier4"/* #Uniquement les fichier + sous dossier
 }
 
 #-------------------------------------------------------------------------
@@ -405,7 +417,7 @@ if [ $retour -eq 1 ]; then
   echo "ERREUR : Impossible de compiler le programme, veuillez vérifier"$'\n'            #Renvoyer une ERREUR et arrêter le programme si l'on arrive pas à compiler
   exit 1
 else
-time "$script_dir/$dossier/$executable" "$chemin_csv" "$option_traitement"      #5) Exécuter le programme -> time pour obtenir le temps précis d'éxecution du C        
+time "$script_dir/$dossier/$executable" "$chemin_csv" "$option_traitement" "$script_dir/Cy_Truck/"      #5) Exécuter le programme -> time pour obtenir le temps précis d'éxecution du C        
 fi
 
 echo "#-----------------------------------------------#"$'\n'
