@@ -202,13 +202,13 @@ done
 
 traitement_gnuplot_d1()
 {
-#Format du txt : Conducteur 1 valeur_trajet
+#Format du txt : Conducteur valeur_trajet
 #Trie le fichier decroissant
 
 # Script Gnuplot
-sort -k2 -r "$script_dir/$dossier3/data_d1.txt" | gnuplot << EOF #Bloc pour envoyer plusieurs comandes à Gnuplot
+sort -k2,2 -r "$script_dir/temp/data_d1.txt" | gnuplot << EOF #Bloc pour envoyer plusieurs comandes à Gnuplot
 set terminal pngcairo enhanced font "arial,10" size 800,600 #Def. le terminal de sortie en .png en 800x600p
-set output "$script_dir/$dossier3/histogramme_d1.png" #Def. le fichier de sortie
+set output "$script_dir/images/histogramme_d1.png" #Def. le fichier de sortie
 
 # Paramètres du graphique
 set style fill solid
@@ -226,13 +226,13 @@ EOF
 
 traitement_gnuplot_d2()
 {
-#Format du txt : Conducteur 1 valeur_distance
+#Format du txt : Conducteur valeur_distance
 #Trie le fichier decroissant
 
 # Script Gnuplot
-sort -k2 -r "$script_dir/$dossier3/data_d2.txt" | gnuplot << EOF #Bloc pour envoyer plusieurs comandes à Gnuplot
+sort -k2,2 -r "$script_dir/temp/data_d2.txt" | gnuplot << EOF #Bloc pour envoyer plusieurs comandes à Gnuplot
 set terminal pngcairo enhanced font "arial,10" size 800,600 #Def. le terminal de sortie en .png en 800x600p
-set output "$script_dir/$dossier3/histogramme_d2.png" #Def. le fichier de sortie
+set output "$script_dir/images/histogramme_d2.png" #Def. le fichier de sortie
 
 # Paramètres du graphique
 set style fill solid
@@ -254,9 +254,9 @@ traitement_gnuplot_l()
 #Trie le fichier decroissant
 
 # Script Gnuplot
-sort -k1 -r "$script_dir/$dossier3/data_l.txt" | gnuplot << EOF #Bloc pour envoyer plusieurs comandes à Gnuplot
+sort -k1,1 -r "$script_dir/temp/data_l.txt" | gnuplot << EOF #Bloc pour envoyer plusieurs comandes à Gnuplot
 set terminal pngcairo enhanced font "arial,10" size 800,600 #Def. le terminal de sortie en .png en 800x600p
-set output "$script_dir/$dossier3/histogramme_l.png" #Def. le fichier de sortie
+set output "$script_dir/images/histogramme_l.png" #Def. le fichier de sortie
 
 # Paramètres du graphique
 set style fill solid
@@ -272,5 +272,55 @@ EOF
 
 }
 
+traitement_gnuplot_t()
+{
+#Format du txt : Ville nb_trajets_tot nb_départs
+
+#Script Gnuplot
+
+sort -k2,2 -r "$script_dir/temp/data_t.txt" | gnuplot << EOF
+set terminal pngcairo enhanced font "arial,10" size 800,600
+set output "$script_dir/images/histogramme_t.png"
+
+# Paramètres du graphique
+set style fill solid
+set boxwidth 0.4
+set yrange [0:*]
+set xlabel "TOWN NAMES"
+set ylabel "NB TRAJETS"
+set title "Option -t : Nb routes = f(Towns)"
+
+# Tracer l'histogramme regroupé
+plot 'data_t.txt' using 2:xticlabels(1) title "Nombre total de trajets", '' using 3 title "Nombre de départs de trajets" lc rgb "orange"
+EOF
+}
+
+
+traitement_gnuplot_s()
+{
+#Format du txt : ID dist_min dist_max dist_moy
+
+#Script Gnuplot
+sort -k4,4 -r "$script_dir/temp/data_s.txt" | gnuplot << EOF
+set terminal pngcairo enhanced font "arial,10" size 800,600
+set output "$script_dir/images/histogramme_s.png"
+
+# Paramètres du graphique
+set style fill transparent solid 0.3
+set boxwidth 0.5
+set yrange [0:*]
+set xlabel "ID"
+set ylabel "DISTANCE (Km)"
+set title "Option -s : Distance = f(Route)"
+
+# Charger les données
+plot 'data_s.txt' using 1:2:3:4 with filledcurves notitle lc rgb "skyblue", \
+     '' using 1:5:6:7 with filledcurves notitle lc rgb "pink", \
+     '' using 1:8:9:10 with filledcurves notitle lc rgb "lightgreen", \
+     '' using 1:4 with lines title "Moyenne" lc rgb "blue", \
+     '' using 1:2 with lines title "Minimum" lc rgb "red", \
+     '' using 1:3 with lines title "Maximum" lc rgb "green"
+EOF
+}
 
 #-------------------------------------------------------------------------
