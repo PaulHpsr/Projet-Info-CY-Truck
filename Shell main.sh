@@ -57,7 +57,7 @@ for fichier in "${fichiers[@]}"; do
 done
 
 # Existence fichier data ?
-chemin2="$dossier2/$fichier2"
+chemin2="$script_dir/$dossier2/$fichier2"
 if [ -e "$chemin2" ]; then
     echo "Le fichier $fichier2 existe."
 else
