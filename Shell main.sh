@@ -58,7 +58,7 @@ done
 
 # Existence fichier data ?
 chemin2="$dossier2/$fichier2"
-if [ -e "$dossier2" ]; then
+if [ -e "$chemin2" ]; then
     echo "Le fichier $fichier2 existe."
 else
     echo "Le fichier $fichier2 n'existe pas."
