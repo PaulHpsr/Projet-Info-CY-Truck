@@ -31,7 +31,7 @@ existence_executable()
 
   while [ ! -e "$script_dir/$dossier/$executable" ] && [ "$tentatives" -lt "$tentatives_max" ]; do  #Le programme va tenter de compiler tant que l'exec n'existe pas -> max 3x
     ((tentatives++))
-    echo "L'éxécutable: $executable n'existe pas. Tentative $tentatives sur $tentatives_max."$'\n'
+    echo "L'exécutable: $executable n'existe pas. Tentative $tentatives sur $tentatives_max."$'\n'
     echo "Compilation en cours...."$'\n'
     compiler_c
   done
@@ -42,10 +42,10 @@ existence_executable()
   fi
 
   if [ -e "$script_dir/$dossier/$executable" ]; then
-    echo "L'éxécutable: $executable existe."$'\n'
+    echo "L'exécutable: $executable existe."$'\n'
     return 0                                                                                  #Afin de récupérer la valeur de retour de la fonction plus tard dans le "Main"
   else
-    echo "Impossible de compiler l'éxécutable après $tentatives_max tentatives."$'\n'        
+    echo "Impossible de compiler l'exécutable après $tentatives_max tentatives."$'\n'        
     return 1
   fi
 }
@@ -122,7 +122,7 @@ show_help()
 
 compiler_c ()
 {
-make -C $script_dir/progc #Indique au make de rechercher le makefile dans progc
+make -C "$script_dir/$dossier" #Indique au make de rechercher le makefile dans progc
 }
 
 
