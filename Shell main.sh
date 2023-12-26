@@ -24,7 +24,7 @@ executable="Cy_Truck"
 fichiers=("Cy_Truck.c" "Makefile" "Outils_AVL.h" "Traitements.c" "Traitements.h" "outils_AVL.c")
 fichier2="$nom_csv.csv"
 
-existance_executable()
+existence_executable()
 {
   tentatives_max=3
   tentatives=0
@@ -50,7 +50,7 @@ existance_executable()
   fi
 }
 
-existance_dossier()
+existence_dossier()
 {
 # Existence fichiers de progc ?
 for fichier in "${fichiers[@]}"; do                  #Va vérifier dans le dossier progc si chacuns des fichiers sont présent
@@ -402,7 +402,7 @@ obtention_utilisation                                              #2) Obtenir l
 echo "#-----------------------------------------------#"$'\n'
 echo "VERIFICATION DE L'INTEGRITE DE L'OUTIL..."$'\n'
 echo "#-----------------------------------------------#"$'\n'
-existance_dossier                                                  #3) Vérifier si tous les fichiers existes (maintenant que l'on peut vérifier l'existance du csv)
+existence_dossier                                                  #3) Vérifier si tous les fichiers existes (maintenant que l'on peut vérifier l'existence du csv)
 retour=$?                                                            
 if [ $retour -eq 1 ]; then
   echo "ERREUR : L'outil n'est pas complet, veuillez vérifier"$'\n'        #Renvoyer une ERREUR et arrêter le programme si l'on des fichiers important manque -> demander à l'utilisateur de le récupérer
@@ -411,7 +411,7 @@ fi
 echo "#-----------------------------------------------#"$'\n'
 echo "EXECUTION DU PROGRAMME..."$'\n'
 echo "#-----------------------------------------------#"$'\n'
-existance_executable                                                #4) Vérifier si l'exécutable est déjà existant -> l'exécuter ou le compiler en fonction
+existence_executable                                                #4) Vérifier si l'exécutable est déjà existant -> l'exécuter ou le compiler en fonction
 retour=$?
 if [ $retour -eq 1 ]; then
   echo "ERREUR : Impossible de compiler le programme, veuillez vérifier"$'\n'            #Renvoyer une ERREUR et arrêter le programme si l'on arrive pas à compiler
