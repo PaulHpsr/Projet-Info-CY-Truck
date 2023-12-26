@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
       }
       if(strcmp(token, "-l") == 0)
       {
-        traitement_l(chemin_csv, chemin_temp
+        traitement_l(chemin_csv, chemin_temp);
       }
       if(strcmp(token, "-t") == 0)
       {
