@@ -9,7 +9,7 @@ commande=()    #pour utiliser "read" -> permet à l'utilisateur de saisir une co
 
 nom_csv=""
 
-chemin_csv="$script_dir/Cy_Truck/data/$nom_csv.csv"  #chemin du fichier csv
+chemin_csv="$script_dir/data/$nom_csv.csv"  #chemin du fichier csv
 
 option_traitement=()    #Tableau de char -> car plusieurs options  
 
@@ -417,7 +417,7 @@ if [ $retour -eq 1 ]; then
   echo "ERREUR : Impossible de compiler le programme, veuillez vérifier"$'\n'            #Renvoyer une ERREUR et arrêter le programme si l'on arrive pas à compiler
   exit 1
 else
-time "$script_dir/$dossier/$executable" "$chemin_csv" "$option_traitement" "$script_dir/Cy_Truck/"      #5) Exécuter le programme -> time pour obtenir le temps précis d'éxecution du C        
+time "$script_dir/$dossier/$executable" "$chemin_csv" "$option_traitement" "$script_dir"      #5) Exécuter le programme -> time pour obtenir le temps précis d'éxecution du C        
 fi
 
 echo "#-----------------------------------------------#"$'\n'
