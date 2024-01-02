@@ -85,11 +85,67 @@ void traitement_d2(char *fichier) {
     printf("Traitement pour -d2\n");
 }
 
-void traitement_l(char *fichier) {
-    // Code spécifique pour le traitement -l
-    printf("Traitement pour -l\n");
+
+//------------------------------ Traitement l ---------------------//
+void traitement_l(char *fichier, char* chemin_temp) {
+
+
+  FILE* file = fopen(fichier, "r");
+  if (file == NULL)
+  {
+    perror("ERREUR : impossible d'ouvrir le fichier csv");
+    exit(EXIT_FAILURE);
+  }
+
+  TrajetData trajet[300000];
+  int nbTrajet = 0;
+  char ligne[1024];
+
+
+  //Ignorer la première ligne -> présentation des colones
+  fgets(ligne, ligne_taille_max, file);
+
+
+  while (fgets(ligne, ligne_taille_max, file) != NULL)
+    {
+
+      int* currentID;
+      float* currentDistance;
+      
+      sscanf(ligne, "%d;%*[^;];%*[^;];%*[^;];%f;%*[^;]", currentID, currentDistance);
+      trajet[nbTrajet].routeID = currentID;
+      trajet[nbTrajet].totalDistance = currentDistance;
+      nbTrajet++;
+    }
+
+  // Tri du tableau en ordre décroissant du nombre de trajets
+  qsort(trajet, nbTrajet, sizeof(TrajetData), compareTrajets);
+  fclose(file);
+  //Créer un fichier .txt temporaire pour stocker les infos traitées
+  FILE* fichier_temp;
+  fichier_temp = fopen("chemin_temp/temp/data_d1.txt", "w");
+  if (fichier_temp == NULL)
+  {
+    perror("ERREUR : impossible d'ouvrir le fichier csv");
+    exit(EXIT_FAILURE);
+  }
+
+  //On met les infos dans le fichier .txt temporaire
+  for(int i=0; i<nbTrajet; i++)
+    {
+      fprintf(fichier_temp, "%d %f", trajet[i].routeID, trajet[i].totalDistance);
+    }
+  fclose(fichier_temp);
+  
 }
 
+//On reprend globallement le code du traitement d1
+//Fonct° comparer les distances
+int compareTrajets(TrajetData* a, TrajetData* b) 
+{
+  return (b->totalDistance - a->totalDistance);
+}
+//----------------------------------------------------------------//
 void traitement_t(char *fichier) {
     // Code spécifique pour le traitement -t
     printf("Traitement pour -t\n");

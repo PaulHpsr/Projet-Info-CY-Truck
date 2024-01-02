@@ -22,5 +22,18 @@ int compareDrivers();
 
 //--------------------------------------------------------//
 
+//--------------------- TRAITEMENT D2 ---------------------//
+
+//Struct -> stockage données trajets
+typedef struct _trajet
+{
+int routeID;
+float totalDistance;
+} TrajetData;
+
+int compareTrajets();
+
+//---------------------------------------------------------//
+
 
 #endif
