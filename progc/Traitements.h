@@ -23,6 +23,16 @@ int compareDrivers();
 //--------------------------------------------------------//
 
 //--------------------- TRAITEMENT D2 ---------------------//
+//Structure Infos
+typedef struct _driverinfosD2 {
+char driverNom[50];
+float nbDistance;
+} DriverInfosD2;
+
+int compareDriversD2();
+//---------------------------------------------------------//
+
+//--------------------- TRAITEMENT L ---------------------//
 
 //Struct -> stockage données trajets
 typedef struct _trajet

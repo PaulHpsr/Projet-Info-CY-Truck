@@ -80,10 +80,77 @@ int compareDrivers(DriverInfos *a, DriverInfos *b)
 //-----------------------------------------------------------------//
 
 
-void traitement_d2(char *fichier) {
-    // Code spécifique pour le traitement -d2
-    printf("Traitement pour -d2\n");
+//---------------------- Traitement d2 -----------------------------//
+
+//On reprend globallement le traitement d1
+void traitement_d2(char *fichier, char* chemin_temp) 
+{
+
+  DriverInfosD2 drivers[300000];
+  int nbDrivers = 0;
+  char ligne[1024];
+
+  FILE* file = fopen(fichier, "r");
+  if (file == NULL)
+  {
+    perror("ERREUR : impossible d'ouvrir le fichier csv");
+    exit(EXIT_FAILURE);
+  }
+
+  //Ignorer la première ligne -> présentation des colones
+  fgets(ligne, ligne_taille_max, file);
+
+
+  while (fgets(ligne, ligne_taille_max, file) != NULL)
+    {
+      char driverNom[50];
+      float nbDistance = 0;
+
+      sscanf(ligne, "%*[^;];%*[^;];%*[^;];%*[^;];%f;%s", driverNom, nbDistance);
+      //Recherche si le driver existe déjà
+       int existingDriverIndex = -1;
+      for (int i = 0; i < nbDrivers; i++) {
+          if (strcmp(drivers[i].driverNom, driverNom) == 0) {
+              existingDriverIndex = i;
+              break;
+          }
+      }
+      if (existingDriverIndex == -1) 
+      {
+          // Le conducteur n'existe pas encore, ajout au tableau
+          strcpy(drivers[nbDrivers].driverNom, driverNom);
+          drivers[nbDrivers].nbDistance += nbDistance;
+        nbDrivers++;
+      } 
+    }
+
+  // Tri du tableau en ordre décroissant du nombre de trajets
+  qsort(drivers, nbDrivers, sizeof(DriverInfosD2), compareDriversD2);
+  fclose(file);
+  //Créer un fichier .txt temporaire pour stocker les infos traitées
+  FILE* fichier_temp;
+  fichier_temp = fopen("chemin_temp/temp/data_d2.txt", "w");
+  if (fichier_temp == NULL)
+  {
+    perror("ERREUR : impossible d'ouvrir le fichier csv");
+    exit(EXIT_FAILURE);
+  }
+
+  //On met les infos dans le fichier .txt temporaire
+  for(int i=0; i<nbDrivers; i++)
+    {
+      fprintf(fichier_temp, "%s %d", drivers[i].driverNom, drivers[i].nbDistance);
+    }
+  fclose(fichier_temp);
+  
 }
+
+int compareDriversD2(DriverInfos *a, DriverInfos *b)
+{
+  return (b->nbDistance - a->nbDistance);
+}
+
+//------------------------------------------------------------------//
 
 
 //------------------------------ Traitement l ---------------------//
@@ -110,7 +177,7 @@ void traitement_l(char *fichier, char* chemin_temp) {
     {
 
       int* currentID;
-      float* currentDistance;
+      float currentDistance;
       
       sscanf(ligne, "%d;%*[^;];%*[^;];%*[^;];%f;%*[^;]", currentID, currentDistance);
       trajet[nbTrajet].routeID = currentID;
@@ -123,7 +190,7 @@ void traitement_l(char *fichier, char* chemin_temp) {
   fclose(file);
   //Créer un fichier .txt temporaire pour stocker les infos traitées
   FILE* fichier_temp;
-  fichier_temp = fopen("chemin_temp/temp/data_d1.txt", "w");
+  fichier_temp = fopen("chemin_temp/temp/data_l.txt", "w");
   if (fichier_temp == NULL)
   {
     perror("ERREUR : impossible d'ouvrir le fichier csv");
