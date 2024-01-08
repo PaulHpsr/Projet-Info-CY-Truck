@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 //Headers
-#include "Outils_AVL.h"
 #include "Traitements.h"
 
 

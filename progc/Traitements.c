@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Traitements.h"
+#include "Outils_AVL_T.h"
 
 //Taille maximum d'une ligne à gérer
 #define ligne_taille_max 5000 
@@ -145,7 +146,7 @@ void traitement_d2(char *fichier, char* chemin_temp)
   
 }
 
-int compareDriversD2(DriverInfos *a, DriverInfos *b)
+int compareDriversD2(DriverInfosD2 *a, DriverInfosD2 *b)
 {
   return (b->nbDistance - a->nbDistance);
 }
@@ -213,12 +214,66 @@ int compareTrajets(TrajetData* a, TrajetData* b)
   return (b->totalDistance - a->totalDistance);
 }
 //----------------------------------------------------------------//
-void traitement_t(char *fichier) {
-    // Code spécifique pour le traitement -t
-    printf("Traitement pour -t\n");
+
+
+//------------------------------ Traitement t ---------------------//
+void traitement_t(char *fichier, char* chemin_temp) 
+{
+  FILE* file = fopen(fichier, "r");
+  if (file == NULL)
+  {
+    perror("ERREUR : impossible d'ouvrir le fichier csv");
+    exit(EXIT_FAILURE);
+  }
+  
+  char ligne[1024];
+  
+  //Ignorer la première ligne -> présentation des colones
+  fgets(ligne, ligne_taille_max, file);
+
+  char TownA[50];
+  char TownB[50];
+
+  int *h = 0;
+  Arbre *node = NULL;
+  while (fgets(ligne, ligne_taille_max, file) != NULL)
+    {
+      sscanf(ligne, "%*[^;];%*[^;];%s;%s;%*[^;];%*[^;]", TownA, TownB);
+      node = insertion(node, TownA, h, 0); 
+      node = insertion(node, TownB, h, 1); 
+    }
+
+  fclose(file);
+  //Avoir les 10 villes les + visités
+  Ville* tableau[10];
+  int i = 0;
+  postfixeFilsDroit(node,tableau ,i);
+
+  //On met les infos dans le fichier .txt temporaire
+    FILE* fichier_temp;
+    fichier_temp = fopen("chemin_temp/temp/data_t.txt", "w");
+    if (fichier_temp == NULL)
+    {
+      perror("ERREUR : impossible d'ouvrir le fichier csv");
+      exit(EXIT_FAILURE);
+    }
+
+    //On met les infos dans le fichier .txt temporaire
+    for(int y=0; y<10; y++)
+      {
+        fprintf(fichier_temp, "%s %d %d", tableau[y]->nomVille, tableau[y]->nbTrajets, tableau[i]->nbDepart);
+      }
+    fclose(fichier_temp);
+
 }
 
-void traitement_s(char *fichier) {
-    // Code spécifique pour le traitement -s
-    printf("Traitement pour -s\n");
+
+  
+//----------------------------------------------------------------//
+
+
+
+void traitement_s(char *fichier) 
+{
+
 }

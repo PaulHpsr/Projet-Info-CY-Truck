@@ -46,4 +46,17 @@ int compareTrajets();
 //---------------------------------------------------------//
 
 
+//--------------------- TRAITEMENT T ---------------------//
+
+//Outil_AVL_T -> fonct° + struct AVL pour traitement T
+typedef struct VilleStats
+{
+char nomVille[50];
+int nbTrajets;
+int nbDepart;
+}Ville;
+
+void ecrireVilles();
+
+//---------------------------------------------------------//
 #endif

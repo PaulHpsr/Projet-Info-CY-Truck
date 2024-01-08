@@ -1,15 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "Outils_AVL.h"
+#include <string.h>
+#include "Outils_AVL_T.h"
+#include "Traitements.h"
 
 //AVL
 
 // Creer arbre
-Arbre *creerArbre(int data) {
+Arbre *creerArbre(char* nomVille) {
   Arbre *node = malloc(sizeof(Arbre));
-  node->data = data;
+  strcpy(node->nomVille, nomVille);
   node->left = NULL;
   node->right = NULL;
+  node->nbrTrajets = 0;
+  node->nbrDepart = 0;
   node->eq = 0;
   return node;
 }
@@ -17,118 +21,55 @@ Arbre *creerArbre(int data) {
 
 //                              Operations
 
-// Recherche
-Arbre *recherche(Arbre *node, int data) {
-  if(node == NULL)
+// Obtenir les 10 plus grandes villes:
+void postfixeFilsDroit(Arbre *node, Ville* tableau , int *i) 
+{
+  if (node == NULL || *i>=10)
   {
-    return NULL;
+    return;
   }
-  else if(node->data == data)
-  {
-    return node;
-  }
-  else if(node->data > data)
-  {
-    return recherche(node->left, data);
-  }
-  else{
-    return recherche(node->right , data);
-  }
+  //Parcourir tt les fils droit (plus grande valeure)
+  postfixeFilsDroit(node->right, tableau, i);
+
+  //Pareil mais avec le fils gauche 
+  postfixeFilsDroit(node->left, tableau, i);
+
+  tableau[*i].nbDepart = node->nbrDepart;
+  tableau[*i].nbTrajets = node->nbrTrajets;
+  strcpy(tableau[*i].nomVille,node->nomVille);
+  (*i)++;
 }
 
 // Insertion
-Arbre *insertion(Arbre *node, int data, int* h) 
+Arbre *insertion(Arbre *node, char* nomVille, int* h, int depart) 
 {
   if(node == NULL)
   {
     *h = 1;
-    return creerArbre(data);
+    return creerArbre(nomVille);
   }
-  else if (data < node->data)
+
+  int comparaison = strcmp(nomVille, node->nomVille);
+  
+  if (comparaison < 0)
   {
-    node->left = insertion(node->left, data, h);
+    node->left = insertion(node->left, nomVille, h, depart);
     *h = -*h;
   }
-  else if (data > node->data)
+  else if (comparaison > 0)
   {
-    node->right = insertion(node->right, data, h);
+    node->right = insertion(node->right, nomVille, h, depart);
   }
   else{
     *h=0;
-    return node;
-  }
-  if(*h != 0)
-  {
-    node->eq = node->eq + *h;
-    if(node->eq == 0)
+    //La ville existe déjà -> +1 nbr de fois ou elle est traversée
+    node->nbrTrajets++;
+    if(depart == 1)
     {
-      *h = 0;
-    }
-    else{
-      *h = 1;
+      node->nbrDepart++;
     }
   }
-  return node;
-}
-
-// Suppression
-Arbre* suppMinAVL(Arbre* a, int* h, int* pe)
-{
-  Arbre* tmp;
-  if(a->left == NULL)
-  {
-    *pe = a->data;
-    *h = -1;
-    tmp = a;
-    a = a->right;
-    free(tmp);
-    return a;
-  }
-  else{
-    a->left = suppMinAVL(a->left, h, pe);
-    if(*h != 0)
-    {
-      a->eq = a->eq + *h;
-      if(a->eq == 0)
-      {
-        *h = -1;
-      }
-      else
-      {
-        *h = 0;
-      }
-    }
-  }
-  return a;
-}
-
- Arbre *suppressionAVL(Arbre *node, int data, int* h)
-{
-  if(node == NULL)
-  {
-    *h = 1;
-    return node;
-  }
-  else if(data > node->data)
-  {
-    node->right = suppressionAVL(node->right, data, h);
-  }
-  else if(data< node->data)
-  {
-    node->left = suppressionAVL(node->left, data, h);
-    *h = -*h;
-  }
-  else if(node->right != NULL)
-  {
-    node->left = suppMinAVL(node->left, h, node->data);
-  }
-  else{
-    Arbre *temp = node;
-    node = node->left;
-    free(temp);
-    *h= -*h;
-  }
-
+  
   if(*h != 0)
   {
     node->eq = node->eq + *h;
