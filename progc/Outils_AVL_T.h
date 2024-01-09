@@ -23,5 +23,6 @@ Arbre* equilibrageAVL();
 
 //
 void postfixeFilsDroit(); 
+void freeTree();
 
 #endif

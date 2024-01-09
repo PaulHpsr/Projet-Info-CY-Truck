@@ -3,6 +3,7 @@
 #include <string.h>
 #include "Traitements.h"
 #include "Outils_AVL_T.h"
+#include "Outils_AVL_S.h"
 
 //Taille maximum d'une ligne à gérer
 #define ligne_taille_max 5000 
@@ -241,6 +242,7 @@ void traitement_t(char *fichier, char* chemin_temp)
       sscanf(ligne, "%*[^;];%*[^;];%s;%s;%*[^;];%*[^;]", TownA, TownB);
       node = insertion(node, TownA, h, 0); 
       node = insertion(node, TownB, h, 1); 
+      
     }
 
   fclose(file);
@@ -248,6 +250,8 @@ void traitement_t(char *fichier, char* chemin_temp)
   Ville* tableau[10];
   int i = 0;
   postfixeFilsDroit(node,tableau ,i);
+
+  freeTree(node);
 
   //On met les infos dans le fichier .txt temporaire
     FILE* fichier_temp;
@@ -261,7 +265,7 @@ void traitement_t(char *fichier, char* chemin_temp)
     //On met les infos dans le fichier .txt temporaire
     for(int y=0; y<10; y++)
       {
-        fprintf(fichier_temp, "%s %d %d", tableau[y]->nomVille, tableau[y]->nbTrajets, tableau[i]->nbDepart);
+        fprintf(fichier_temp, "%s %d %d", tableau[y]->nomVille, tableau[y]->nbTrajets, tableau[y]->nbDepart);
       }
     fclose(fichier_temp);
 
@@ -272,8 +276,60 @@ void traitement_t(char *fichier, char* chemin_temp)
 //----------------------------------------------------------------//
 
 
+//------------------------------ Traitement S ---------------------//
 
+
+//
 void traitement_s(char *fichier) 
 {
+  FILE* file = fopen(fichier, "r");
+  if (file == NULL)
+  {
+    perror("ERREUR : impossible d'ouvrir le fichier csv");
+    exit(EXIT_FAILURE);
+  }
+
+  char ligne[1024];
+
+  //Ignorer la première ligne -> présentation des colones
+  fgets(ligne, ligne_taille_max, file);
+
+  Trajet trajetCurrent;
+
+  int *h = 0;
+  Arbre *node = NULL;
+  while (fgets(ligne, ligne_taille_max, file) != NULL)
+    {
+      sscanf(ligne, "%d;%*[^;];%*[^;];%*[^;];%f;%*[^;]", trajetCurrent.id, trajetCurrent.distance);
+      node = insertionS(node, trajetCurrent, h); 
+//Mettre équilibrage AVL
+
+    }
+
+  fclose(file);
+  //Avoir les 10 villes les + visités
+  TrajetFinal* tableau[300];
+  int i = 0;
+  postfixeFilsDroitS(node,tableau ,i);
+
+  freeTreeS(node);
+
+  //On met les infos dans le fichier .txt temporaire
+    FILE* fichier_temp;
+    fichier_temp = fopen("chemin_temp/temp/data_s.txt", "w");
+    if (fichier_temp == NULL)
+    {
+      perror("ERREUR : impossible d'ouvrir le fichier csv");
+      exit(EXIT_FAILURE);
+    }
+
+    //On met les infos dans le fichier .txt temporaire
+    for(int y=0; y<=i; y++)
+      {
+        fprintf(fichier_temp, "%d %f %f %f", tableau[y]->id, tableau[y]->min, tableau[y]->max, tableau[y]->moy);
+      }
+    fclose(fichier_temp);
 
 }
+
+//----------------------------------------------------------------//

@@ -162,5 +162,13 @@ Arbre* equilibrageAVL(Arbre* a)
 //
 
 
+// Fonction pour libérer la mémoire occupée par les nœuds de l'AVL
+void freeTree(Arbre *root) {
+    if (root == NULL)
+        return;
 
+    freeTree(root->left);
+    freeTree(root->right);
+    free(root);
+}
 
