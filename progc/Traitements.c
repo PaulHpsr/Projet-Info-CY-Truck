@@ -241,8 +241,9 @@ void traitement_t(char *fichier, char* chemin_temp)
     {
       sscanf(ligne, "%*[^;];%*[^;];%s;%s;%*[^;];%*[^;]", TownA, TownB);
       node = insertion(node, TownA, h, 0); 
+      node = equilibrageAVL(node);
       node = insertion(node, TownB, h, 1); 
-      
+      node = equilibrageAVL(node);
     }
 
   fclose(file);
@@ -303,7 +304,7 @@ void traitement_s(char *fichier)
       sscanf(ligne, "%d;%*[^;];%*[^;];%*[^;];%f;%*[^;]", trajetCurrent.id, trajetCurrent.distance);
       node = insertionS(node, trajetCurrent, h); 
 //Mettre équilibrage AVL
-
+node = equilibrageAVLS(node);
     }
 
   fclose(file);

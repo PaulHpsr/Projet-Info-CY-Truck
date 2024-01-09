@@ -137,6 +137,13 @@ Arbre* rotationDoubleDroit(Arbre* a)
 // Equilibrage
 Arbre* equilibrageAVL(Arbre* a)
 {
+  if(a!= NULL)
+  {
+
+    // Équilibrer les sous-arbres
+    a->left = equilibrageAVL(a->left);
+    a->right = equilibrageAVL(a->right);
+    
   if(a->eq >= 2)
   {
     if(a->right->eq >= 0)
@@ -156,6 +163,7 @@ Arbre* equilibrageAVL(Arbre* a)
     else{
       return rotationDoubleDroit(a);
     }
+  }
   }
   return a;
 }

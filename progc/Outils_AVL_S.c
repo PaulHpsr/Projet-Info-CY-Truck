@@ -118,24 +118,30 @@ Node* rotationDoubleDroitS(Node* a)
 // Equilibrage
 Node* equilibrageAVLS(Node* a)
 {
-  if(a->eq >= 2)
-  {
-    if(a->right->eq >= 0)
+  if(a!=NULL)
+  { // Équilibrer les sous-arbres
+    a->left = equilibrageAVLS(a->left);
+    a->right = equilibrageAVLS(a->right);
+    
+   if(a->eq >= 2)
     {
-      return rotationGaucheS(a);
+      if(a->right->eq >= 0)
+      {
+       return rotationGaucheS(a);
+     }
+     else{
+        return rotationDoubleGaucheS(a);
+     }
     }
-    else{
-      return rotationDoubleGaucheS(a);
-    }
-  }
 
-  else if(a-> eq <= -2)
-  {
-    if(a->left->eq <= 0){
-      return rotationDroiteS(a);
-    }
-    else{
-      return rotationDoubleDroitS(a);
+    else if(a-> eq <= -2)
+    {
+      if(a->left->eq <= 0){
+        return rotationDroiteS(a);
+      }
+      else{
+        return rotationDoubleDroitS(a);
+      }
     }
   }
   return a;
