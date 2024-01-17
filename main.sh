@@ -20,9 +20,9 @@ dossier="progc"
 dossier2="data"
 dossier3="images"
 dossier4="temp"
-executable="Cy_Truck"
-fichiers=("Cy_Truck.c" "Makefile" "Outils_AVL.h" "Traitements.c" "Traitements.h" "outils_AVL.c")
-fichier2="$nom_csv.csv"
+executable="CY_Truck"
+fichiers=("Cy_Truck.c" "Makefile" "Outils_AVL_S.h" "Outils_AVL_T.h" "Outils_AVL_T.h" "Traitements.c" "Traitements.h" "Outils_AVL_S.c")
+fichier2="$nom_csv"
 
 existence_executable()
 {
@@ -116,7 +116,6 @@ show_help()
     echo "4) Les 10 villes les plus traversées : option -t"$'\n'
     echo "5) Statistiques sur les étapes : option -s"$'\n'
     echo "------------------------------"$'\n'
-    exit 1
 }
 
 
@@ -133,17 +132,19 @@ obtention_utilisation ()
 while [ "${#commande[@]}" -lt 4 ]; do    
   commande=()   #On réinitialise la valeur de commande
   show_help
-  echo "Entrer une commande :"$'\n'
-  read -r commande  #On lis l'entrée utilisateur
+  read -r -p "Entrer une commande : " -a commande  #On lis l'entrée utilisateur
+  echo "Commande après la saisie : ${commande[@]}"
 done
 
 while getopts ":f:o:" opt; do
     case $opt in
         f)
             nom_csv="$OPTARG"
+            echo "$nom_csv"
             ;;
         o)
             option_traitement+=("$OPTARG")
+            echo "$option_traitement"
             ;;
         \?)
             echo "Option invalide: -$OPTARG"$'\n' >&2
@@ -166,7 +167,7 @@ while [ "${#commande[@]}" -lt 4 ]; do
   commande=()   #On réinitialise la valeur de commande
   show_help
   echo "Entrer une commande :"$'\n'
-  read -r commande  #On lis l'entrée utilisateur
+  read -r -p "Entrer une commande : " commande  #On lis l'entrée utilisateur
 done
 
   while getopts ":f:o:" opt; do
@@ -218,6 +219,7 @@ do                                           #Si commande -h on ne prend en comp
   if [[ $i == "-h" ]]; then 
     show_help
     return 0
+  fi
 done
 
 for i in "${option_traitement[@]}";          #On va parcourir une deuxième fois les options et effectuer le traitement associé si pas -h
@@ -243,7 +245,6 @@ do
           show_help
           ;;
    esac
-  fi
 done
 }
 #-------------------------------------------------------------------------
@@ -398,7 +399,10 @@ echo "#-----------------------------------------------#"$'\n'
 echo "Bienvenue dans le Cy Truck Data Analyser"$'\n'
 echo "#-----------------------------------------------#"$'\n'
 show_help                                                          #1) Montrer l'utilisation du programme
-obtention_utilisation                                              #2) Obtenir la commande de l'utilisateur (connaitre les options + nom du fichier csv)
+obtention_utilisation
+echo "$nom_csv"
+echo "$option_traitement"
+#2) Obtenir la commande de l'utilisateur (connaitre les options + nom du fichier csv)
 echo "#-----------------------------------------------#"$'\n'
 echo "VERIFICATION DE L'INTEGRITE DE L'OUTIL..."$'\n'
 echo "#-----------------------------------------------#"$'\n'
@@ -417,7 +421,7 @@ if [ $retour -eq 1 ]; then
   echo "ERREUR : Impossible de compiler le programme, veuillez vérifier"$'\n'            #Renvoyer une ERREUR et arrêter le programme si l'on arrive pas à compiler
   exit 1
 else
-time "$script_dir/$dossier/$executable" "$chemin_csv" "$option_traitement" "$script_dir"      #5) Exécuter le programme -> time pour obtenir le temps précis d'éxecution du C        
+time "$script_dir/$dossier/$executable" "$chemin_csv" "$option_traitement" "$script_dir/$dossier4"      #5) Exécuter le programme -> time pour obtenir le temps précis d'éxecution du C        
 fi
 
 echo "#-----------------------------------------------#"$'\n'

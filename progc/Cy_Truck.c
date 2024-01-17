@@ -9,11 +9,12 @@
 
 int main(int argc, char *argv[]) {
   if (argc < 3) {                             //Vérifier le C à bien récupéré les arguments donnés par le shell (<3 car -> nom prog + option + chemin csv)
-    fprintf(stderr, "Erreur, pas assez d'arguments, ou mauvais arguments\n");
+    printf("Erreur, pas assez d'arguments, ou mauvais arguments\n");
     return 1;
   }
 
   // Récupérer les arguments dans des varr globales ?
+  
   char *chemin_csv = argv[1]; 
   char *option_traitement = argv[2];
   char *chemin_temp = argv[3];

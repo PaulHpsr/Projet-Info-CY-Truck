@@ -71,7 +71,7 @@ Node *insertionS(Node *node, Trajet data, int* h)
 // Cas 1 : ele. aj. tt a droite
 Node* rotationGaucheS(Node* a)
 {
-  Arbre* pivot;
+  Node* pivot;
   int eq_a, eq_p;
 
   pivot = a->right;
