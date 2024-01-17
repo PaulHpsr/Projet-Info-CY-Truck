@@ -75,9 +75,9 @@ void traitement_d1(char *fichier, char* chemin_temp) {
 }
 
 //Afin de trier les conducteurs par ordre décroissant
-int compareDrivers(DriverInfos *a, DriverInfos *b)
+floatcompareDrivers(DriverInfos *a, DriverInfos *b)
 {
-  return (b->nbTrajets - a->nbTrajets);
+  return ((float)((DriverInfos*)b)->totalDistance - ((DriverInfos*)a)->totalDistance);
 }
 //-----------------------------------------------------------------//
 
@@ -147,9 +147,9 @@ void traitement_d2(char *fichier, char* chemin_temp)
   
 }
 
-int compareDriversD2(DriverInfosD2 *a, DriverInfosD2 *b)
+float compareDriversD2(DriverInfosD2 *a, DriverInfosD2 *b)
 {
-  return (b->nbDistance - a->nbDistance);
+  return ((float)((DriverInfosD2*)b)->totalDistance - ((DriverInfosD2*)a)->totalDistance);
 }
 
 //------------------------------------------------------------------//
@@ -210,9 +210,9 @@ void traitement_l(char *fichier, char* chemin_temp) {
 
 //On reprend globallement le code du traitement d1
 //Fonct° comparer les distances
-int compareTrajets(TrajetData* a, TrajetData* b) 
+float compareTrajets(TrajetData* a, TrajetData* b) 
 {
-  return (b->totalDistance - a->totalDistance);
+  ((float)((TrajetData*)b)->totalDistance - ((TrajetData*)a)->totalDistance);
 }
 //----------------------------------------------------------------//
 

@@ -18,7 +18,7 @@ char driverNom[50];
 int nbTrajets;
 } DriverInfos;
 
-int compareDrivers();
+float compareDrivers();
 
 //--------------------------------------------------------//
 
@@ -29,7 +29,7 @@ char driverNom[50];
 float nbDistance;
 } DriverInfosD2;
 
-int compareDriversD2();
+float compareDriversD2();
 //---------------------------------------------------------//
 
 //--------------------- TRAITEMENT L ---------------------//
@@ -41,7 +41,7 @@ int routeID;
 float totalDistance;
 } TrajetData;
 
-int compareTrajets();
+float compareTrajets();
 
 //---------------------------------------------------------//
 

@@ -30,7 +30,7 @@ Node *insertionS(Node *node, Trajet data, int* h)
     node->left = insertionS(node->left, data, h);
     *h = -*h;
   }
-  else if (data.id < node->id)
+  else if (data.id > node->id)
   {
     node->right = insertionS(node->right, data, h);
   }
