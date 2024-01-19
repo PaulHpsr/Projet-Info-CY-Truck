@@ -425,6 +425,7 @@ start=$(date +%s)
 ./progc/CY_Truck "$chemin_csv" "$option_traitement"       #5) Exécuter le programme -> time pour obtenir le temps précis d'éxecution du C        
 end=$(date +%s)
 temps=$((end - start))
+echo "Durée d'exécution: ${temps} secondes"$'\n'
 fi
 
 echo "#-----------------------------------------------#"$'\n'
