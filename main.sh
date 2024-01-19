@@ -422,7 +422,8 @@ if [ $retour -eq 1 ]; then
   exit 1
 else
 start=$(date +%s)
-./progc/CY_Truck "$chemin_csv" "$option_traitement"       #5) Exécuter le programme -> time pour obtenir le temps précis d'éxecution du C        
+./progc/CY_Truck "$chemin_csv" "$option_traitement"       #5) Exécuter le programme -> time pour obtenir le temps précis d'éxecution du C   
+echo $?
 end=$(date +%s)
 temps=$((end - start))
 echo "Durée d'exécution: ${temps} secondes"$'\n'
