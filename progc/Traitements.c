@@ -9,7 +9,7 @@
 #define ligne_taille_max 5000 
 
 //----------------------------- Traitement d1 ---------------------//
-void traitement_d1(char *fichier, char* chemin_temp) {
+void traitement_d1(char *fichier) {
 
   DriverInfos drivers[300000];
   int nbDrivers = 0;
@@ -59,7 +59,7 @@ void traitement_d1(char *fichier, char* chemin_temp) {
   fclose(file);
   //Créer un fichier .txt temporaire pour stocker les infos traitées
   FILE* fichier_temp;
-  fichier_temp = fopen("chemin_temp/temp/data_d1.txt", "w");
+  fichier_temp = fopen("../temp/monFichierTemp.txt", "w");
   if (fichier_temp == NULL)
   {
     perror("ERREUR : impossible d'ouvrir le fichier csv");
@@ -85,7 +85,7 @@ float compareDrivers(DriverInfos *a, DriverInfos *b)
 //---------------------- Traitement d2 -----------------------------//
 
 //On reprend globallement le traitement d1
-void traitement_d2(char *fichier, char* chemin_temp) 
+void traitement_d2(char *fichier) 
 {
 
   DriverInfosD2 drivers[300000];
@@ -131,7 +131,7 @@ void traitement_d2(char *fichier, char* chemin_temp)
   fclose(file);
   //Créer un fichier .txt temporaire pour stocker les infos traitées
   FILE* fichier_temp;
-  fichier_temp = fopen("chemin_temp/temp/data_d2.txt", "w");
+  fichier_temp = fopen("../temp/monFichierTemp.txt", "w");
   if (fichier_temp == NULL)
   {
     perror("ERREUR : impossible d'ouvrir le fichier csv");
@@ -156,7 +156,7 @@ float compareDriversD2(DriverInfosD2 *a, DriverInfosD2 *b)
 
 
 //------------------------------ Traitement l ---------------------//
-void traitement_l(char *fichier, char* chemin_temp) {
+void traitement_l(char *fichier) {
 
 
   FILE* file = fopen(fichier, "r");
@@ -191,9 +191,9 @@ void traitement_l(char *fichier, char* chemin_temp) {
   qsort(trajet, nbTrajet, sizeof(TrajetData), compareTrajets);
   fclose(file);
   //Créer un fichier .txt temporaire pour stocker les infos traitées
-  FILE* fichier_temp;
-  fichier_temp = fopen("chemin_temp/temp/data_l.txt", "w");
-  if (fichier_temp == NULL)
+  FILE* fTemp;
+  fTemp = fopen("../temp/monFichierTemp.txt", "w");
+  if (fTemp == NULL)
   {
     perror("ERREUR : impossible d'ouvrir le fichier csv");
     exit(EXIT_FAILURE);
@@ -202,9 +202,9 @@ void traitement_l(char *fichier, char* chemin_temp) {
   //On met les infos dans le fichier .txt temporaire
   for(int i=0; i<nbTrajet; i++)
     {
-      fprintf(fichier_temp, "%d %f", trajet[i].routeID, trajet[i].totalDistance);
+      fprintf(fTemp, "%d %f", trajet[i].routeID, trajet[i].totalDistance);
     }
-  fclose(fichier_temp);
+  fclose(fTemp);
   
 }
 
@@ -218,7 +218,7 @@ float compareTrajets(TrajetData* a, TrajetData* b)
 
 
 //------------------------------ Traitement t ---------------------//
-void traitement_t(char *fichier, char* chemin_temp) 
+void traitement_t(char *fichier) 
 {
   FILE* file = fopen(fichier, "r");
   if (file == NULL)
@@ -255,8 +255,8 @@ void traitement_t(char *fichier, char* chemin_temp)
   freeTree(node);
 
   //On met les infos dans le fichier .txt temporaire
-    FILE* fichier_temp;
-    fichier_temp = fopen("chemin_temp/temp/data_t.txt", "w");
+  FILE* fichier_temp;
+  fichier_temp = fopen("../temp/monFichierTemp.txt", "w");
     if (fichier_temp == NULL)
     {
       perror("ERREUR : impossible d'ouvrir le fichier csv");
@@ -316,8 +316,8 @@ node = equilibrageAVLS(node);
   freeTreeS(node);
 
   //On met les infos dans le fichier .txt temporaire
-    FILE* fichier_temp;
-    fichier_temp = fopen("chemin_temp/temp/data_s.txt", "w");
+  FILE* fichier_temp;
+  fichier_temp = fopen("../temp/monFichierTemp.txt", "w");
     if (fichier_temp == NULL)
     {
       perror("ERREUR : impossible d'ouvrir le fichier csv");

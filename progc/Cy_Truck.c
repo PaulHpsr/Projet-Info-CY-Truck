@@ -17,7 +17,6 @@ int main(int argc, char *argv[]) {
   
   char *chemin_csv = argv[1]; 
   char *option_traitement = argv[2];
-  char *chemin_temp = argv[3];
   
   //Diviser les options en plusieurs tokens
   char *token = strtok(option_traitement, " "); //Ainsi on récupère les options séparées par des espaces

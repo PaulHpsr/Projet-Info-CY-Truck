@@ -421,7 +421,10 @@ if [ $retour -eq 1 ]; then
   echo "ERREUR : Impossible de compiler le programme, veuillez vérifier"$'\n'            #Renvoyer une ERREUR et arrêter le programme si l'on arrive pas à compiler
   exit 1
 else
-time "$script_dir/$dossier/$executable" "$chemin_csv" "$option_traitement" "$script_dir/$dossier4"      #5) Exécuter le programme -> time pour obtenir le temps précis d'éxecution du C        
+start=$(date +%s)
+./progc/CY_Truck "$chemin_csv" "$option_traitement"       #5) Exécuter le programme -> time pour obtenir le temps précis d'éxecution du C        
+end=$(date +%s)
+temps=$((end - start))
 fi
 
 echo "#-----------------------------------------------#"$'\n'
