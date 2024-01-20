@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Traitements.h"
-#include "Outils_AVL_T.h"
-#include "Outils_AVL_S.h"
+
 
 //Taille maximum d'une ligne à gérer
 #define ligne_taille_max 5000 

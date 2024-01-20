@@ -1,6 +1,8 @@
 #ifndef __Traitements__H__
 #define __Traitements__H__
 
+#include "Outils_AVL_T.h"
+#include "Outils_AVL_S.h"
 
 //Fonct° Traitements Générales
 void traitement_d1();

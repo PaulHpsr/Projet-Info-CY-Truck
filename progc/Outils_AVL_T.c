@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Outils_AVL_T.h"
 #include "Traitements.h"
 
 //AVL
