@@ -16,22 +16,17 @@ option_traitement=()    #Tableau de char -> car plusieurs options
 #-----------------------------------------------------------------------------------------
 
 #---------------------------- Gestion dossier --------------------
-dossier="progc"
-dossier2="data"
-dossier3="images"
-dossier4="temp"
-executable="CY_Truck"
+
 fichiers=("Cy_Truck.c" "Makefile" "Outils_AVL_S.h" "Outils_AVL_T.h" "Outils_AVL_T.h" "Traitements.c" "Traitements.h" "Outils_AVL_S.c")
-fichier2="$nom_csv"
 
 existence_executable()
 {
   tentatives_max=3
   tentatives=0
 
-  while [ ! -e "$script_dir/$dossier/$executable" ] && [ "$tentatives" -lt "$tentatives_max" ]; do  #Le programme va tenter de compiler tant que l'exec n'existe pas -> max 3x
+  while [ ! -e "$script_dir/progc/CY_Truck" ] && [ "$tentatives" -lt "$tentatives_max" ]; do  #Le programme va tenter de compiler tant que l'exec n'existe pas -> max 3x
     ((tentatives++))
-    echo "L'exécutable: $executable n'existe pas. Tentative $tentatives sur $tentatives_max."$'\n'
+    echo "L'exécutable: CY_Truck n'existe pas. Tentative $tentatives sur $tentatives_max."$'\n'
     echo "Compilation en cours...."$'\n'
     compiler_c
   done
@@ -41,8 +36,8 @@ existence_executable()
     return 1
   fi
 
-  if [ -e "$script_dir/$dossier/$executable" ]; then
-    echo "L'exécutable: $executable existe."$'\n'
+  if [ -e "$script_dir/progc/CY_Truck" ]; then
+    echo "L'exécutable: CY_Truck existe."$'\n'
     return 0                                                                                  #Afin de récupérer la valeur de retour de la fonction plus tard dans le "Main"
   else
     echo "Impossible de compiler l'exécutable après $tentatives_max tentatives."$'\n'        
@@ -54,7 +49,7 @@ existence_dossier()
 {
 # Existence fichiers de progc ?
 for fichier in "${fichiers[@]}"; do                  #Va vérifier dans le dossier progc si chacuns des fichiers sont présent
-    chemin="$script_dir/$dossier/$fichier"
+    chemin="$script_dir/progc/$fichiers"
     if [ -e "$chemin" ]; then
         echo "Le fichier $chemin existe."$'\n'
     else    
@@ -65,32 +60,32 @@ for fichier in "${fichiers[@]}"; do                  #Va vérifier dans le dossi
 done
 
 # Existence fichier data ?
-chemin2="$script_dir/$dossier2/$fichier2"
+chemin2="$script_dir/data/$nom_csv"
 if [ -e "$chemin2" ]; then
-    echo "Le fichier $fichier2 existe."$'\n'
+    echo "Le fichier $nom_csv existe."$'\n'
 else
-    echo "Le fichier $fichier2 n'existe pas."$'\n'
+    echo "Le fichier $nom_csv n'existe pas."$'\n'
     echo "Veuiller corriger l'erreur puis relancer...."$'\n'
     return 1
 fi
 
 # Exitence dossier images ?
-if [ -d "$dossier3" ]; then
-    echo "Le dossier \ $dossier \ existe"$'\n'
+if [ -d "images" ]; then
+    echo "Le dossier \ progc \ existe"$'\n'
 else
-    mkdir "$script_dir/$dossier3"                                                                           #Créer le dossier s'il est inexistant
-    echo "Le dossier \ $dossier \ n'existait pas mais a été crée"$'\n'
+    mkdir "$script_dir/images"                                                                           #Créer le dossier s'il est inexistant
+    echo "Le dossier \ progc \ n'existait pas mais a été crée"$'\n'
 fi
 
 # Exitence dossier temp ?
-if [ -d "$dossier4" ]; then
-    echo "Le dossier \ $dossier4 existe"$'\n'
+if [ -d "temp" ]; then
+    echo "Le dossier \ temp existe"$'\n'
     # Vider le contenu du dossier temp
-    rm -r "$dossier4"/* #Uniquement les fichier + sous dossier
-    echo "Le dossier \ $dossier4 \ a été vidé"$'\n'
+    rm -r "temp"/* #Uniquement les fichier + sous dossier
+    echo "Le dossier \ temp \ a été vidé"$'\n'
 else
-    mkdir "$script_dir/$dossier4"
-    echo "Le dossier \ $dossier4 \ n'existait pas mais a été crée"$'\n'
+    mkdir "$script_dir/temp"
+    echo "Le dossier \ temp \ n'existait pas mais a été crée"$'\n'
 fi
 }
 
@@ -121,7 +116,7 @@ show_help()
 
 compiler_c ()
 {
-make -C "$script_dir/$dossier" #Indique au make de rechercher le makefile dans progc
+make -C "$script_dir/progc" #Indique au make de rechercher le makefile dans progc
 }
 
 
@@ -142,7 +137,7 @@ while getopts ":f:o:" opt; do
             nom_csv="$OPTARG"
             echo "$nom_csv"
             ;;
-        o)
+        o )
             option_traitement+=("$OPTARG")
             echo "$option_traitement"
             ;;
@@ -276,7 +271,7 @@ plot 'data_d1.txt' using 2:yticlabels(1) with boxes title "Nombre de trajets" #U
 EOF
 
 # Vider le contenu du dossier temp
-rm -r "$dossier4"/* #Uniquement les fichier + sous dossier
+rm -r "temp"/* #Uniquement les fichier + sous dossier
 }
 
 traitement_gnuplot_d2()
@@ -302,7 +297,7 @@ plot 'data_d2.txt' using 2:yticlabels(1) with boxes title "Nombre de trajets" #U
 EOF
 
 # Vider le contenu du dossier temp
-rm -r "$dossier4"/* #Uniquement les fichier + sous dossier
+rm -r "temp"/* #Uniquement les fichier + sous dossier
 }
 
 traitement_gnuplot_l()
@@ -328,7 +323,7 @@ plot 'data_l.txt' using 2:xticlabels(1) with boxes title "Nombre de trajets" #Ut
 EOF
 
 # Vider le contenu du dossier temp
-rm -r "$dossier4"/* #Uniquement les fichier + sous dossier
+rm -r "temp"/* #Uniquement les fichier + sous dossier
 }
 
 traitement_gnuplot_t()
@@ -354,7 +349,7 @@ plot 'data_t.txt' using 2:xticlabels(1) title "Nombre total de trajets", '' usin
 EOF
 
 # Vider le contenu du dossier temp
-rm -r "$dossier4"/* #Uniquement les fichier + sous dossier
+rm -r "temp"/* #Uniquement les fichier + sous dossier
 }
 
 
@@ -385,7 +380,7 @@ plot 'data_s.txt' using 1:2:3:4 with filledcurves notitle lc rgb "skyblue", \
 EOF
 
 # Vider le contenu du dossier temp
-rm -r "$dossier4"/* #Uniquement les fichier + sous dossier
+rm -r "temp"/* #Uniquement les fichier + sous dossier
 }
 
 #-------------------------------------------------------------------------
