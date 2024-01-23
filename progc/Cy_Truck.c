@@ -12,13 +12,13 @@ int main(int argc, char *argv[]) {
   printf("%d", argc);
   int i =2;
 
-  for(i; i<argv; i++)       //Parcourir pour effectuer chaques traitements
+  for(i; i<argv-1; i++)       //Parcourir pour effectuer chaques traitements
   {
   printf("%s\n", argv[i]);
 
   }
 
-  if (argc < 2) {                             //Vérifier le C à bien récupéré les arguments donnés par le shell (<3 car -> nom prog + option + chemin csv)
+  if (argc < 3) {                     //Vérifier le C à bien récupéré les arguments donnés par le shell (<3 car -> nom prog + option + chemin csv)
     printf("Erreur, pas assez d'arguments, ou mauvais arguments\n");
     return 1;
   }
