@@ -8,103 +8,99 @@
 #define ligne_taille_max 5000 
 
 //----------------------------- Traitement d1 ---------------------//
+
+//Structure Infos
+typedef struct _driverinfos {
+char driverNom[50];
+int nbTrajets;
+} DriverInfos;
+
+
+
 void traitement_d1(char *fichier) {
+    char driverNom[100];
+    char driverPrenom[100];
 
-  printf("CACAD1\n");
-  int id;
-  char driverNom[50];
-  char driverPrenom[50];
-  
-  DriverInfos drivers[300000];
-  int nbDrivers = 0;
-  char ligne[ligne_taille_max];
-  
-  FILE* file = fopen("./data/data.csv", "r");
-  if (file == NULL)
-  {
-    perror("ERREUR : impossible d'ouvrir le fichier csv");
-    exit(EXIT_FAILURE);
-  }
+      DriverInfos drivers[200];
+      int nbDrivers = 0;
 
-  printf("MerdOMax1\n");
-  
-  //Ignorer la première ligne -> présentation des colones
-  fgets(ligne, ligne_taille_max, file);
+      char ligne[ligne_taille_max];
 
-  FILE* fichier_temp;
-  fichier_temp = fopen("./temp/data_d1.txt", "w");
-  if (fichier_temp == NULL)
-  {
-    perror("ERREUR : impossible d'ouvrir le fichier csv");
-    exit(EXIT_FAILURE);
-  }
+    char chemin_fichier[50] ="./data/";
+    strcat(chemin_fichier,fichier);
+    strcat(chemin_fichier, ".csv");
 
-  printf("MerdOMax2\n");
-  
-  while (fgets(ligne, ligne_taille_max, file) != NULL)
-    {
-      printf("MerdOMax3\n");
-      sscanf(ligne, "%d;%*[^;];%*[^;];%*[^;];%*[^;];%s %s", &id, driverNom, driverPrenom);
-      strncat(driverNom, " ", 1);
-      strcat(driverNom, driverPrenom);
-      fprintf(fichier_temp, "%s;%d\n", driverNom, id);
-    }
-  printf("MerdOMax4\n");
-  fclose(fichier_temp);
-  fclose(file);
-   /*int existingDriverIndex = -1;
-  
-  while (fgets(ligne, ligne_taille_max, file) != NULL)
-    {
-      char driverNom[50];
-      int nbTrajets = 0;
-      
-      sscanf(ligne, "%*[^;];%*[^;];%*[^;];%*[^;];%*[^;];%s", driverNom);
-      //Recherche si le driver existe déjà
-      for (int i = 0; i < nbDrivers; i++) {
-          if (strcmp(drivers[i].driverNom, driverNom) == 0) {
-              existingDriverIndex = i;
-              break;
+      FILE* file = fopen(chemin_fichier, "r");
+      if (file == NULL)
+      {
+        perror("ERREUR : impossible d'ouvrir le fichier csv");
+        exit(EXIT_FAILURE);
+      }
+
+
+      //Ignorer la première ligne -> présentation des colones
+      fgets(ligne, ligne_taille_max, file);
+
+    while(fgets(ligne, ligne_taille_max, file) != NULL)
+      {
+        //
+        sscanf(ligne, "%*[^;];%*[^;];%*[^;];%*[^;];%*[^;];%s %s", driverNom, driverPrenom);
+        //Obtenir Prenom + NOM
+        strncat(driverNom, " ", 1);
+        strcat(driverNom, driverPrenom);
+        //Ajouter le premier driver sinon bug
+        if(nbDrivers == 0)
+        {
+          nbDrivers++; 
+          strcpy(drivers[0].driverNom, driverNom);
+          drivers[0].nbTrajets = 1; 
+        }
+
+       //Rechercher si le conducteur existe 
+        else
+        {
+          int driverExists = 0;
+          for (int i = 0; i < nbDrivers; i++)
+          {
+              if (strcmp(drivers[i].driverNom, driverNom) == 0)
+              {
+                  drivers[i].nbTrajets++;
+                  driverExists = 1;
+                  break; // Break out of the loop since driver is found
+              }
+          }
+
+          // Si le conducteur n'existe pas, l'ajouter
+          if (driverExists !=1)
+          {
+              strcpy(drivers[nbDrivers].driverNom, driverNom);
+              drivers[nbDrivers].nbTrajets = 1;
+              nbDrivers++;
           }
       }
-      if (existingDriverIndex == -1) 
+    }
+  
+      fclose(file);
+
+      //Créer un fichier .txt temporaire pour stocker les infos traitées
+      FILE* fichier_temp;
+      fichier_temp = fopen("./temp/data_d1.txt", "w");
+      if (fichier_temp == NULL)
       {
-          // Le conducteur n'existe pas encore, ajout au tableau
-          strcpy(drivers[nbDrivers].driverNom, driverNom);
-          drivers[nbDrivers].nbTrajets = 1;
-          nbDrivers++;
-      } 
-      else 
-      {
-          // Le conducteur existe déjà, incrémente le nombre de trajets
-          drivers[existingDriverIndex].nbTrajets++;
+        perror("ERREUR : impossible d'ouvrir le fichier csv");
+        exit(EXIT_FAILURE);
       }
-    }
 
-  fclose(file);
-  //Créer un fichier .txt temporaire pour stocker les infos traitées
-  FILE* fichier_temp;
-  fichier_temp = fopen("../temp/data_d1.txt", "w");
-  if (fichier_temp == NULL)
-  {
-    perror("ERREUR : impossible d'ouvrir le fichier csv");
-    exit(EXIT_FAILURE);
-  }
+      //On met les infos dans le fichier .txt temporaire
+      for(int i=0; i<nbDrivers; i++)
+        {
+          fprintf(fichier_temp, "%s;%d\n", drivers[i].driverNom, drivers[i].nbTrajets);
+        }
+      fclose(fichier_temp); 
 
-  //On met les infos dans le fichier .txt temporaire
-  for(int i=0; i<nbDrivers; i++)
-    {
-      fprintf(fichier_temp, "%s;%d", drivers[i].driverNom, drivers[i].nbTrajets);
-    }
-  fclose(fichier_temp);
-  */
+
 }
 
-//Afin de trier les conducteurs par ordre décroissant
-float compareDrivers(DriverInfos *a, DriverInfos *b)
-{
-  return ((float)((DriverInfos*)b)->nbTrajets - ((DriverInfos*)a)->nbTrajets);
-}
 //-----------------------------------------------------------------//
 
 

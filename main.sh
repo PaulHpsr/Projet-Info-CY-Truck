@@ -73,7 +73,7 @@ fi
 if [ -d "temp" ]; then
     echo "Le dossier \ temp existe"$'\n'
     # Vider le contenu du dossier temp
-    rm -r "temp"/* #Uniquement les fichier + sous dossier
+    rm -r "./temp" #Uniquement les fichier + sous dossier
     echo "Le dossier \ temp \ a été vidé"$'\n'
 else
     mkdir "$script_dir/temp"
@@ -244,7 +244,7 @@ traitement_gnuplot_d1()
 {
 #Format du txt : Conducteur;nb_trajet
 # Tri du fichier
-sort -t';' -k2,2 -nr "$script_dir/temp/data_d1.txt" > "$script_dir/temp/data_d1_sorted.txt"
+sort -t';' -k2,2 -nr "$script_dir/temp/data_d1.txt" | head -n 10 > "$script_dir/temp/data_d1_sorted.txt"
 
 # Utilisation du fichier trié dans Gnuplot
 "$gnuplot_path" <<-EOF

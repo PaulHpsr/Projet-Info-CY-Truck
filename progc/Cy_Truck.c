@@ -11,7 +11,6 @@ int main(int argc, char *argv[]) {
     // d1 d2  -> nom_prog + chemin + d1 + d2
   int i =2;
   int y=2;
-  printf("Caca\n");
   for(y; y<argc;y++)
     {
   printf("%s\n", argv[y]);    

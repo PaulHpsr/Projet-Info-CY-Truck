@@ -5,7 +5,7 @@
 #include "Outils_AVL_S.h"
 
 //Fonct° Traitements Générales
-void traitement_d1();
+
 void traitement_d2();
 void traitement_l();
 void traitement_t();
@@ -14,13 +14,7 @@ void traitement_s();
 
 //--------------------- TRAITEMENT D1 ---------------------//
 
-//Structure Infos
-typedef struct _driverinfos {
-char driverNom[50];
-int nbTrajets;
-} DriverInfos;
-
-float compareDrivers();
+void traitement_d1();
 
 //--------------------------------------------------------//
 
