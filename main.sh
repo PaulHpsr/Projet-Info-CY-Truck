@@ -74,6 +74,7 @@ if [ -d "temp" ]; then
     echo "Le dossier \ temp existe"$'\n'
     # Vider le contenu du dossier temp
     rm -r "./temp" #Uniquement les fichier + sous dossier
+    mkdir "$script_dir/temp"
     echo "Le dossier \ temp \ a été vidé"$'\n'
 else
     mkdir "$script_dir/temp"
