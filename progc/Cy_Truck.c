@@ -3,7 +3,7 @@
 #include <string.h>
 
 //Headers
-//#include "Traitements.h"
+#include "Traitements.h"
 
 
 
@@ -18,27 +18,27 @@ int main(int argc, char *argv[]) {
   // Traitement des options
   for(i; i<argc-1; i++)       //Parcourir pour effectuer chaques traitements
   {
-    if(strmp(argv[i], "-d1") == 0)
+    if(strcmp(argv[i], "-d1") == 0)
     {
       traitement_d1(chemin_csv);
     }
 
-    if(strmp(argv[i], "-d2") == 0)
+    if(strcmp(argv[i], "-d2") == 0)
     {
       traitement_d2(chemin_csv);
     }
 
-    if(strmp(argv[i], "-l") == 0)
+    if(strcmp(argv[i], "-l") == 0)
     {
       traitement_l(chemin_csv);
     }
 
-    if(strmp(argv[i], "-t") == 0)
+    if(strcmp(argv[i], "-t") == 0)
     {
       traitement_t(chemin_csv);
     }
 
-    if(strmp(argv[i], "s") == 0)
+    if(strcmp(argv[i], "s") == 0)
     {
       traitement_s(chemin_csv);
     }
