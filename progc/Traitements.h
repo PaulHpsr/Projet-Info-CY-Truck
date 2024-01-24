@@ -50,32 +50,11 @@ float compareTrajets();
 
 //--------------------- TRAITEMENT T ---------------------//
 
-//Outil_AVL_T -> fonct° + struct AVL pour traitement T
-typedef struct VilleStats
-{
-char nomVille[50];
-int nbTrajets;
-int nbDepart;
-}Ville;
 
 //---------------------------------------------------------//
 
 //--------------------- TRAITEMENT S ---------------------//
 
-// Structure pour stocker les données d'un trajet
-typedef struct 
-{
-  int id;
-  float distance;
-} Trajet;
-
-typedef struct
-{
-int id;
-float max;
-float min;
-float moy;
-} TrajetFinal;
 
 
 

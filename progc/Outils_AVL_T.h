@@ -13,6 +13,16 @@ int eq; //equilibre
 } Arbre;
 
 
+//Outil_AVL_T -> fonct° + struct AVL pour traitement T
+typedef struct VilleStats
+{
+char nomVille[50];
+int nbTrajets;
+int nbDepart;
+}Ville;
+
+
+
 Arbre *creerArbre();
 Arbre *insertion();
 Arbre* rotationGauche();

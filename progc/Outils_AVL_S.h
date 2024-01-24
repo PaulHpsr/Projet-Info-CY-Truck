@@ -12,6 +12,23 @@ typedef struct _node
   int eq;
 } Node;
 
+
+// Structure pour stocker les données d'un trajet
+typedef struct 
+{
+  int id;
+  float distance;
+} Trajet;
+
+typedef struct
+{
+int id;
+float max;
+float min;
+float moy;
+} TrajetFinal;
+
+
 //
 Node *newNode();
 Node *insertionS();

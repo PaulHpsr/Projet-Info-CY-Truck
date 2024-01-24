@@ -10,20 +10,49 @@
 //----------------------------- Traitement d1 ---------------------//
 void traitement_d1(char *fichier) {
 
+  printf("CACAD1\n");
+  int id;
+  char driverNom[50];
+  char driverPrenom[50];
+  
   DriverInfos drivers[300000];
   int nbDrivers = 0;
-  char ligne[1024];
+  char ligne[ligne_taille_max];
   
-  FILE* file = fopen(fichier, "r");
+  FILE* file = fopen("./data/data.csv", "r");
   if (file == NULL)
   {
     perror("ERREUR : impossible d'ouvrir le fichier csv");
     exit(EXIT_FAILURE);
   }
 
+  printf("MerdOMax1\n");
+  
   //Ignorer la première ligne -> présentation des colones
   fgets(ligne, ligne_taille_max, file);
 
+  FILE* fichier_temp;
+  fichier_temp = fopen("./temp/data_d1.txt", "w");
+  if (fichier_temp == NULL)
+  {
+    perror("ERREUR : impossible d'ouvrir le fichier csv");
+    exit(EXIT_FAILURE);
+  }
+
+  printf("MerdOMax2\n");
+  
+  while (fgets(ligne, ligne_taille_max, file) != NULL)
+    {
+      printf("MerdOMax3\n");
+      sscanf(ligne, "%d;%*[^;];%*[^;];%*[^;];%*[^;];%s %s", &id, driverNom, driverPrenom);
+      strncat(driverNom, " ", 1);
+      strcat(driverNom, driverPrenom);
+      fprintf(fichier_temp, "%s;%d\n", driverNom, id);
+    }
+  printf("MerdOMax4\n");
+  fclose(fichier_temp);
+  fclose(file);
+   /*int existingDriverIndex = -1;
   
   while (fgets(ligne, ligne_taille_max, file) != NULL)
     {
@@ -32,7 +61,6 @@ void traitement_d1(char *fichier) {
       
       sscanf(ligne, "%*[^;];%*[^;];%*[^;];%*[^;];%*[^;];%s", driverNom);
       //Recherche si le driver existe déjà
-       int existingDriverIndex = -1;
       for (int i = 0; i < nbDrivers; i++) {
           if (strcmp(drivers[i].driverNom, driverNom) == 0) {
               existingDriverIndex = i;
@@ -53,8 +81,6 @@ void traitement_d1(char *fichier) {
       }
     }
 
-  // Tri du tableau en ordre décroissant du nombre de trajets
-  qsort(drivers, nbDrivers, sizeof(DriverInfos), compareDrivers);
   fclose(file);
   //Créer un fichier .txt temporaire pour stocker les infos traitées
   FILE* fichier_temp;
@@ -71,6 +97,7 @@ void traitement_d1(char *fichier) {
       fprintf(fichier_temp, "%s;%d", drivers[i].driverNom, drivers[i].nbTrajets);
     }
   fclose(fichier_temp);
+  */
 }
 
 //Afin de trier les conducteurs par ordre décroissant

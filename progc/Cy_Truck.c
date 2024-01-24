@@ -10,16 +10,23 @@
 int main(int argc, char *argv[]) {
     // d1 d2  -> nom_prog + chemin + d1 + d2
   int i =2;
+  int y=2;
+  printf("Caca\n");
+  for(y; y<argc;y++)
+    {
+  printf("%s\n", argv[y]);    
+    }
 
-  // Récupérer les arguments dans des varr globales ?
   
+  // Récupérer les arguments dans des varr globales ?
   char *chemin_csv = argv[1]; 
   //On a arv[1+i] -> sera une option de traitement 
   // Traitement des options
-  for(i; i<argc-1; i++)       //Parcourir pour effectuer chaques traitements
+  for(i; i<argc; i++)       //Parcourir pour effectuer chaques traitements
   {
     if(strcmp(argv[i], "-d1") == 0)
     {
+      printf("Traitement d1 en cours\n");
       traitement_d1(chemin_csv);
     }
 
@@ -38,7 +45,7 @@ int main(int argc, char *argv[]) {
       traitement_t(chemin_csv);
     }
 
-    if(strcmp(argv[i], "s") == 0)
+    if(strcmp(argv[i], "-s") == 0)
     {
       traitement_s(chemin_csv);
     }
