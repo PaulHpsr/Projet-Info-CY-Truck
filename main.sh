@@ -426,7 +426,7 @@ fi
 echo "#-----------------------------------------------#"$'\n'
 echo "EXECUTION DU PROGRAMME..."$'\n'
 echo "#-----------------------------------------------#"$'\n'
-time ./progc/CY_Truck "$chemin_csv" "${option_traitement[@]}"
+time ./progc/CY_Truck "${chemin_csv}" "${option_traitement[@]}"
 
 
 echo "#-----------------------------------------------#"$'\n'

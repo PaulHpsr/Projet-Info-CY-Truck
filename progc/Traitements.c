@@ -58,7 +58,7 @@ void traitement_d1(char *fichier) {
   fclose(file);
   //Créer un fichier .txt temporaire pour stocker les infos traitées
   FILE* fichier_temp;
-  fichier_temp = fopen("../temp/monFichierTemp.txt", "w");
+  fichier_temp = fopen("../temp/data_d1.txt", "w");
   if (fichier_temp == NULL)
   {
     perror("ERREUR : impossible d'ouvrir le fichier csv");
@@ -68,7 +68,7 @@ void traitement_d1(char *fichier) {
   //On met les infos dans le fichier .txt temporaire
   for(int i=0; i<nbDrivers; i++)
     {
-      fprintf(fichier_temp, "%s %d", drivers[i].driverNom, drivers[i].nbTrajets);
+      fprintf(fichier_temp, "%s;%d", drivers[i].driverNom, drivers[i].nbTrajets);
     }
   fclose(fichier_temp);
 }
@@ -130,7 +130,7 @@ void traitement_d2(char *fichier)
   fclose(file);
   //Créer un fichier .txt temporaire pour stocker les infos traitées
   FILE* fichier_temp;
-  fichier_temp = fopen("../temp/monFichierTemp.txt", "w");
+  fichier_temp = fopen("../temp/data_d2.txt", "w");
   if (fichier_temp == NULL)
   {
     perror("ERREUR : impossible d'ouvrir le fichier csv");
@@ -140,7 +140,7 @@ void traitement_d2(char *fichier)
   //On met les infos dans le fichier .txt temporaire
   for(int i=0; i<nbDrivers; i++)
     {
-      fprintf(fichier_temp, "%s %d", drivers[i].driverNom, drivers[i].nbDistance);
+      fprintf(fichier_temp, "%s;%d", drivers[i].driverNom, drivers[i].nbDistance);
     }
   fclose(fichier_temp);
   
@@ -191,7 +191,7 @@ void traitement_l(char *fichier) {
   fclose(file);
   //Créer un fichier .txt temporaire pour stocker les infos traitées
   FILE* fTemp;
-  fTemp = fopen("../temp/monFichierTemp.txt", "w");
+  fTemp = fopen("../temp/data_l.txt", "w");
   if (fTemp == NULL)
   {
     perror("ERREUR : impossible d'ouvrir le fichier csv");
@@ -201,7 +201,7 @@ void traitement_l(char *fichier) {
   //On met les infos dans le fichier .txt temporaire
   for(int i=0; i<nbTrajet; i++)
     {
-      fprintf(fTemp, "%d %f", trajet[i].routeID, trajet[i].totalDistance);
+      fprintf(fTemp, "%d;%f", trajet[i].routeID, trajet[i].totalDistance);
     }
   fclose(fTemp);
   
@@ -255,7 +255,7 @@ void traitement_t(char *fichier)
 
   //On met les infos dans le fichier .txt temporaire
   FILE* fichier_temp;
-  fichier_temp = fopen("../temp/monFichierTemp.txt", "w");
+  fichier_temp = fopen("../temp/data_t.txt", "w");
     if (fichier_temp == NULL)
     {
       perror("ERREUR : impossible d'ouvrir le fichier csv");
@@ -265,7 +265,7 @@ void traitement_t(char *fichier)
     //On met les infos dans le fichier .txt temporaire
     for(int y=0; y<10; y++)
       {
-        fprintf(fichier_temp, "%s %d %d", tableau[y]->nomVille, tableau[y]->nbTrajets, tableau[y]->nbDepart);
+        fprintf(fichier_temp, "%s;%d;%d", tableau[y]->nomVille, tableau[y]->nbTrajets, tableau[y]->nbDepart);
       }
     fclose(fichier_temp);
 
@@ -316,7 +316,7 @@ node = equilibrageAVLS(node);
 
   //On met les infos dans le fichier .txt temporaire
   FILE* fichier_temp;
-  fichier_temp = fopen("../temp/monFichierTemp.txt", "w");
+  fichier_temp = fopen("../temp/data_s.txt", "w");
     if (fichier_temp == NULL)
     {
       perror("ERREUR : impossible d'ouvrir le fichier csv");
@@ -326,7 +326,7 @@ node = equilibrageAVLS(node);
     //On met les infos dans le fichier .txt temporaire
     for(int y=0; y<=i; y++)
       {
-        fprintf(fichier_temp, "%d %f %f %f", tableau[y]->id, tableau[y]->min, tableau[y]->max, tableau[y]->moy);
+        fprintf(fichier_temp, "%d;%f;%f;%f", tableau[y]->id, tableau[y]->min, tableau[y]->max, tableau[y]->moy);
       }
     fclose(fichier_temp);
 
