@@ -4,8 +4,6 @@
 #include "Outils_AVL_T.h"
 #include "Outils_AVL_S.h"
 
-void traitement_t();
-void traitement_s();
 
 
 //--------------------- TRAITEMENT D1 ---------------------//
@@ -28,15 +26,13 @@ void traitement_l();
 
 //--------------------- TRAITEMENT T ---------------------//
 
+void traitement_t();
 
 //---------------------------------------------------------//
 
 //--------------------- TRAITEMENT S ---------------------//
 
-
-
-
-
+void traitement_s();
 
 //---------------------------------------------------------//
 
