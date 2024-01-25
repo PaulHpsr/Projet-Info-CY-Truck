@@ -289,16 +289,24 @@ void traitement_l(char *fichier) {
 
 
 //------------------------------ Traitement t ---------------------//
+
 void traitement_t(char *fichier) 
 {
-  FILE* file = fopen(fichier, "r");
+
+  if(strcmp(chemin_fichier, "./data/") == 0)
+  {
+    strcat(chemin_fichier,fichier);
+    strcat(chemin_fichier, ".csv");
+  }
+
+  FILE* file = fopen(chemin_fichier, "r");
   if (file == NULL)
   {
     perror("ERREUR : impossible d'ouvrir le fichier csv");
     exit(EXIT_FAILURE);
   }
   
-  char ligne[1024];
+  char ligne[ligne_taille_max];
   
   //Ignorer la première ligne -> présentation des colones
   fgets(ligne, ligne_taille_max, file);
@@ -354,14 +362,20 @@ void traitement_t(char *fichier)
 //
 void traitement_s(char *fichier) 
 {
-  FILE* file = fopen(fichier, "r");
+  if(strcmp(chemin_fichier, "./data/") == 0)
+  {
+    strcat(chemin_fichier,fichier);
+    strcat(chemin_fichier, ".csv");
+  }
+
+  FILE* file = fopen(chemin_fichier, "r");
   if (file == NULL)
   {
     perror("ERREUR : impossible d'ouvrir le fichier csv");
     exit(EXIT_FAILURE);
   }
 
-  char ligne[1024];
+  char ligne[ligne_taille_max];
 
   //Ignorer la première ligne -> présentation des colones
   fgets(ligne, ligne_taille_max, file);
@@ -372,7 +386,7 @@ void traitement_s(char *fichier)
   Arbre *node = NULL;
   while (fgets(ligne, ligne_taille_max, file) != NULL)
     {
-      sscanf(ligne, "%d;%*[^;];%*[^;];%*[^;];%f;%*[^;]", trajetCurrent.id, trajetCurrent.distance);
+      sscanf(ligne, "%d;%*[^;];%*[^;];%*[^;];%f;%*[^;]", &trajetCurrent.id, &trajetCurrent.distance);
       node = insertionS(node, trajetCurrent, h); 
 //Mettre équilibrage AVL
 node = equilibrageAVLS(node);
