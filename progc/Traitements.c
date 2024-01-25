@@ -146,7 +146,6 @@ void traitement_d2(char *fichier)
     {
       //
       sscanf(ligne, "%*[^;];%*[^;];%*[^;];%*[^;];%f;%s %s", &nbDistance ,driverNom, driverPrenom);
-      printf("Distance : %f\n", nbDistance);
       //Obtenir Prenom + NOM
       strncat(driverNom, " ", 1);
       strcat(driverNom, driverPrenom);
@@ -185,11 +184,6 @@ void traitement_d2(char *fichier)
 
     fclose(file);
 
-
-  for(int i=0; i<nbDrivers; i++)
-    {
-      printf("Tableau : %s;%f\n", drivers[i].driverNom, drivers[i].nbDistance);
-    }
   
     //Créer un fichier .txt temporaire pour stocker les infos traitées
     FILE* fichier_temp;
