@@ -165,6 +165,19 @@ while [ "${#commande[@]}" -lt 4 ]; do
   echo "Commande après la saisie : ${commande[@]}"$'\n'
 done
 
+presence_com=0
+
+for i in "${commande[@]}"; do 
+  if [ "$i" = "-f" ] || [ "$i" = "-o" ]; then
+    presence_com=$((presence_com + 1))
+  fi
+done
+
+if [ "$presence_com" != 2 ]; then
+  echo "Il manque une option de commande (soit -o soit -f), veuillez réessayer"$'\n'
+  obtention_utilisation
+fi
+
 verifier_commande
 local verification_result=$?
   # Si la vérif n'est pas valide redemande la commande
@@ -305,7 +318,8 @@ traitement_gnuplot_l()
 {
 #Format du txt : Conducteur;nb_trajet
 # Tri du fichier
-sort -t';' -k1,1n "$script_dir/temp/data_l.txt" > "$script_dir/temp/data_l_sorted.txt"
+sort -t';' -k2,2 -nr "$script_dir/temp/data_l.txt" | head -n 10 > "$script_dir/temp/data_l_sorted.txt"
+sort -t';' -k1,1n "$script_dir/temp/data_l_sorted.txt"
 # Utilisation du fichier trié dans Gnuplot
 "$gnuplot_path" <<-EOF
 
@@ -404,9 +418,9 @@ echo "#-----------------------------------------------#"$'\n'
 
 show_help
 obtention_utilisation
-for i in "${option_traitement[@]}";        
+for i in "${option_traitement[@]}";
 do               
-  if [[ $i == "-h" ]]; then 
+  if [ "$i" = "-h" ]; then 
     show_help
     obtention_utilisation
   fi

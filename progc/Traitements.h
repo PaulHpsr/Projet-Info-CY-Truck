@@ -4,10 +4,6 @@
 #include "Outils_AVL_T.h"
 #include "Outils_AVL_S.h"
 
-//Fonct° Traitements Générales
-
-void traitement_d2();
-void traitement_l();
 void traitement_t();
 void traitement_s();
 
@@ -25,14 +21,7 @@ void traitement_d2();
 
 //--------------------- TRAITEMENT L ---------------------//
 
-//Struct -> stockage données trajets
-typedef struct _trajet
-{
-int routeID;
-float totalDistance;
-} TrajetData;
-
-float compareTrajets();
+void traitement_l();
 
 //---------------------------------------------------------//
 

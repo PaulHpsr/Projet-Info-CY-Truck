@@ -28,13 +28,16 @@ void traitement_d1(char *fichier) {
 
       char ligne[ligne_taille_max];
 
+  if(strcmp(chemin_fichier, "./data/") == 0)
+  {
     strcat(chemin_fichier,fichier);
     strcat(chemin_fichier, ".csv");
+  }
 
       FILE* file = fopen(chemin_fichier, "r");
       if (file == NULL)
       {
-        perror("ERREUR : impossible d'ouvrir le fichier csv");
+        perror("ERREUR : impossible d'ouvrir le fichier csv original");
         exit(EXIT_FAILURE);
       }
 
@@ -88,7 +91,7 @@ void traitement_d1(char *fichier) {
       fichier_temp = fopen("./temp/data_d1.txt", "w");
       if (fichier_temp == NULL)
       {
-        perror("ERREUR : impossible d'ouvrir le fichier csv");
+        perror("ERREUR : impossible d'ouvrir le fichier csv data d1");
         exit(EXIT_FAILURE);
       }
 
@@ -128,13 +131,18 @@ void traitement_d2(char *fichier)
 
   char ligne[ligne_taille_max];
 
-  strcat(chemin_fichier,fichier);
-  strcat(chemin_fichier, ".csv");
 
+  if(strcmp(chemin_fichier, "./data/") == 0)
+  {
+    strcat(chemin_fichier,fichier);
+    strcat(chemin_fichier, ".csv");
+  }
+
+  printf("Chemin d2 : %s\n", chemin_fichier);
     FILE* file = fopen(chemin_fichier, "r");
     if (file == NULL)
     {
-      perror("ERREUR : impossible d'ouvrir le fichier csv");
+      perror("ERREUR : impossible d'ouvrir le fichier csv original (-d2)");
       exit(EXIT_FAILURE);
     }
 
@@ -190,7 +198,7 @@ void traitement_d2(char *fichier)
     fichier_temp = fopen("./temp/data_d2.txt", "w");
     if (fichier_temp == NULL)
     {
-      perror("ERREUR : impossible d'ouvrir le fichier csv");
+      perror("ERREUR : impossible d'ouvrir le fichier csv data_d2 ");
       exit(EXIT_FAILURE);
     }
 
@@ -210,64 +218,73 @@ void traitement_d2(char *fichier)
 
 
 //------------------------------ Traitement l ---------------------//
+//Struct -> stockage données trajets
+typedef struct _trajet
+{
+int routeID;
+float totalDistance;
+} TrajetData;
+
+
 void traitement_l(char *fichier) {
 
+  TrajetData trajet[300];
+  int nbTrajet = 0;
 
-  FILE* file = fopen(fichier, "r");
-  if (file == NULL)
+   int currentID = 0;
+   float currentDistance = 0;
+  
+  char ligne[ligne_taille_max];
+
+  if(strcmp(chemin_fichier, "./data/") == 0)
   {
-    perror("ERREUR : impossible d'ouvrir le fichier csv");
-    exit(EXIT_FAILURE);
+    strcat(chemin_fichier,fichier);
+    strcat(chemin_fichier, ".csv");
   }
 
-  TrajetData trajet[300000];
-  int nbTrajet = 0;
-  char ligne[1024];
+    FILE* file = fopen(chemin_fichier, "r");
+    if (file == NULL)
+    {
+      perror("ERREUR : impossible d'ouvrir le fichier csv");
+      exit(EXIT_FAILURE);
+    }
 
 
-  //Ignorer la première ligne -> présentation des colones
-  fgets(ligne, ligne_taille_max, file);
+    //Ignorer la première ligne -> présentation des colones
+    fgets(ligne, ligne_taille_max, file);
 
-
-  while (fgets(ligne, ligne_taille_max, file) != NULL)
+  while(fgets(ligne, ligne_taille_max, file) != NULL)
     {
 
-      int* currentID;
-      float currentDistance;
+
+      sscanf(ligne, "%d;%*[^;];%*[^;];%*[^;];%f;%*[^;]", &currentID, &currentDistance);
       
-      sscanf(ligne, "%d;%*[^;];%*[^;];%*[^;];%f;%*[^;]", currentID, currentDistance);
       trajet[nbTrajet].routeID = currentID;
       trajet[nbTrajet].totalDistance = currentDistance;
       nbTrajet++;
-    }
-
-  // Tri du tableau en ordre décroissant du nombre de trajets
-  qsort(trajet, nbTrajet, sizeof(TrajetData), compareTrajets);
-  fclose(file);
-  //Créer un fichier .txt temporaire pour stocker les infos traitées
-  FILE* fTemp;
-  fTemp = fopen("../temp/data_l.txt", "w");
-  if (fTemp == NULL)
-  {
-    perror("ERREUR : impossible d'ouvrir le fichier csv");
-    exit(EXIT_FAILURE);
   }
 
-  //On met les infos dans le fichier .txt temporaire
-  for(int i=0; i<nbTrajet; i++)
+    fclose(file);
+
+
+    //Créer un fichier .txt temporaire pour stocker les infos traitées
+    FILE* fichier_temp;
+    fichier_temp = fopen("./temp/data_l.txt", "w");
+    if (fichier_temp == NULL)
     {
-      fprintf(fTemp, "%d;%f", trajet[i].routeID, trajet[i].totalDistance);
+      perror("ERREUR : impossible d'ouvrir le fichier csv");
+      exit(EXIT_FAILURE);
     }
-  fclose(fTemp);
-  
+
+    //On met les infos dans le fichier .txt temporaire
+    for(int i=0; i<nbTrajet; i++)
+      {
+        fprintf(fichier_temp, "%d;%f\n", trajet[i].routeID, trajet[i].totalDistance);
+      }
+
+    fclose(fichier_temp); 
 }
 
-//On reprend globallement le code du traitement d1
-//Fonct° comparer les distances
-float compareTrajets(TrajetData* a, TrajetData* b) 
-{
-  ((float)((TrajetData*)b)->totalDistance - ((TrajetData*)a)->totalDistance);
-}
 //----------------------------------------------------------------//
 
 
