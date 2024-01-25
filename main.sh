@@ -276,7 +276,7 @@ traitement_gnuplot_d2()
 #Trie le fichier decroissant
 
 # Script Gnuplot
-sort -t';' -k2,2 -nr "$script_dir/temp/data_d2.txt" > "$script_dir/temp/data_d2_sorted.txt"
+sort -t';' -k2,2 -nr "$script_dir/temp/data_d2.txt" | head -n 10 > "$script_dir/temp/data_d2_sorted.txt"
 
 # Utilisation du fichier trié dans Gnuplot
 "$gnuplot_path" <<-EOF

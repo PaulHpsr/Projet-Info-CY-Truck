@@ -31,6 +31,7 @@ int main(int argc, char *argv[]) {
 
     if(strcmp(argv[i], "-d2") == 0)
     {
+      printf("Traitement d2 en cours\n");
       traitement_d2(chemin_csv);
     }
 

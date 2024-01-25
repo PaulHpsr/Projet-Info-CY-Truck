@@ -19,13 +19,8 @@ void traitement_d1();
 //--------------------------------------------------------//
 
 //--------------------- TRAITEMENT D2 ---------------------//
-//Structure Infos
-typedef struct _driverinfosD2 {
-char driverNom[50];
-float nbDistance;
-} DriverInfosD2;
+void traitement_d2();
 
-float compareDriversD2();
 //---------------------------------------------------------//
 
 //--------------------- TRAITEMENT L ---------------------//
