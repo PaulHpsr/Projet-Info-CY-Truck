@@ -352,7 +352,7 @@ sort -t';' -k1,1n "$script_dir/temp/data_t.txt" > "$script_dir/temp/data_t_sorte
 # Utilisation du fichier trié dans Gnuplot
 "$gnuplot_path" <<-EOF
 
-set terminal pngcairo enhanced font 'Verdana,10'
+set terminal pngcairo enhanced font "arial,10" size 800,600
 set output "$script_dir/images/graphique_t.png"
 set title 'Option -t : Nb routes = f(Towns)'
 set style data histogram
@@ -370,8 +370,10 @@ set style fill transparent solid 0.5 noborder
 # Spécifier le délimiteur de colonnes
 set datafile separator ";"
 
-plot  "$script_dir/temp/data_t_sorted.txt" using 2:xtic(1) title 'Total trajets' lc rgb '#FF0000', '' using 3 title 'Trajets depuis' lc rgb '#0000FF'
+# Faire pivoter les étiquettes de l'axe des x de 45 degrés
+set xtics rotate by -45
 
+plot  "$script_dir/temp/data_t_sorted.txt" using 2:xtic(1) title 'Total trajets' lc rgb '#FF0000', '' using 3 title 'Trajets depuis' lc rgb '#0000FF'
 EOF
 }
 #---------------------

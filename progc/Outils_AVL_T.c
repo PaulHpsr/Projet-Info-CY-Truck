@@ -38,25 +38,49 @@ void traitement_t(char *fichier)
   char TownA[50];
   char TownB[50];
 
-  int *h = 0;
+  int* h = malloc(sizeof(int));
+  *h=0;
   Arbre* node = NULL;
-  while (fgets(ligne, ligne_taille_max, file) != NULL)
-    {
-      sscanf(ligne, "%*[^;];%*[^;];%s;%s;%*[^;];%*[^;]", TownA, TownB);
-      node = insertion(node, TownA, h, 0); 
-      node = equilibrageAVL(node);
-      node = insertion(node, TownB, h, 1); 
-      node = equilibrageAVL(node);
-    }
 
+  int b=0;
+  while (fgets(ligne, ligne_taille_max, file) != NULL) {
+    char *token = strtok(ligne, ";");
+    if (token != NULL) {
+      // Skip les deux premiers champs 
+      token = strtok(NULL, ";");
+      token = strtok(NULL, ";");
+
+      // Les prochains deux champs contiennent les noms de ville
+      if (token != NULL) {
+        // Vérif que la chaîne est correctement copiée et finie par le caractère nul
+        strncpy(TownA, token, sizeof(TownA) - 1);
+        TownA[sizeof(TownA) - 1] = '\0';
+      }
+
+      token = strtok(NULL, ";");
+      if (token != NULL) {
+        // Vérif que la chaîne est correctement copiée et finie par le caractère nul
+        strncpy(TownB, token, sizeof(TownB) - 1);
+        TownB[sizeof(TownB) - 1] = '\0';
+
+
+        //insertion + d'équilibrage 
+        node = insertion(node, TownA, h, 0); 
+        node = equilibrageAVL(node);
+        node = insertion(node, TownB, h, 1); 
+        node = equilibrageAVL(node);
+        b++;
+      }
+    }
+  }
   fclose(file);
   //Avoir les 10 villes les + visités
-  Ville* tableau[10];
+  Ville tableau[10];
+  
   int i = 0;
-  postfixeFilsDroit(node,tableau ,i);
+  postfixeFilsDroit(node, tableau, &i);
 
   freeTree(node);
-
   //On met les infos dans le fichier .txt temporaire
   FILE* fichier_temp;
   fichier_temp = fopen("./temp/data_t.txt", "w");
@@ -65,14 +89,12 @@ void traitement_t(char *fichier)
       perror("ERREUR : impossible d'ouvrir le fichier csv");
       exit(EXIT_FAILURE);
     }
-
     //On met les infos dans le fichier .txt temporaire
     for(int y=0; y<10; y++)
       {
-        fprintf(fichier_temp, "%s;%d;%d", tableau[y]->nomVille, tableau[y]->nbTrajets, tableau[y]->nbDepart);
+        fprintf(fichier_temp, "%s;%d;%d\n", tableau[y].nomVille, tableau[y].nbTrajets, tableau[y].nbDepart);
       }
     fclose(fichier_temp);
-
 }
 
 
@@ -87,6 +109,12 @@ void traitement_t(char *fichier)
 // Creer arbre
 Arbre* creerArbre(char* nomVille) {
   Arbre *node = malloc(sizeof(Arbre));
+  if (node == NULL) 
+  {
+    fprintf(stderr, "Erreur d'allocation mémoire\n");
+    exit(EXIT_FAILURE);
+  }
+
   strcpy(node->nomVille, nomVille);
   node->left = NULL;
   node->right = NULL;
@@ -100,21 +128,20 @@ Arbre* creerArbre(char* nomVille) {
 //                              Operations
 
 // Obtenir les 10 plus grandes villes:
-void postfixeFilsDroit(Arbre* node, Ville* tableau , int* i) 
-{
-  if (node == NULL || *i>=10)
-  {
+void postfixeFilsDroit(Arbre* node, Ville tableau[], int *i) {
+  if (node == NULL || *i >= 10) {
     return;
   }
-  //Parcourir tt les fils droit (plus grande valeure)
+
+  // Parcourir tous les fils droits (plus grande valeur)
   postfixeFilsDroit(node->right, tableau, i);
 
-  //Pareil mais avec le fils gauche 
+  // Pareil mais avec le fils gauche 
   postfixeFilsDroit(node->left, tableau, i);
 
   tableau[*i].nbDepart = node->nbrDepart;
   tableau[*i].nbTrajets = node->nbrTrajets;
-  strcpy(tableau[*i].nomVille,node->nomVille);
+  strcpy(tableau[*i].nomVille, node->nomVille);
   (*i)++;
 }
 
@@ -124,19 +151,23 @@ Arbre* insertion(Arbre* node, char* nomVille, int* h, int depart)
   if(node == NULL)
   {
     *h = 1;
-    return creerArbre(nomVille);
+    node = creerArbre(nomVille);
+    node->nbrTrajets =1;
+    node->nbrDepart =1;
+    return node;
   }
-
   int comparaison = strcmp(nomVille, node->nomVille);
   
-  if (comparaison < 0)
+  if (comparaison != 0)
   {
+    if(node->nbrTrajets >= 1){
     node->left = insertion(node->left, nomVille, h, depart);
     *h = -*h;
-  }
-  else if (comparaison > 0)
-  {
-    node->right = insertion(node->right, nomVille, h, depart);
+    }
+    else if (node->nbrTrajets < 1)
+    {
+      node->right = insertion(node->right, nomVille, h, depart);
+    }
   }
   else{
     *h=0;

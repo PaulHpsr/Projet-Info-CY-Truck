@@ -12,12 +12,12 @@
 int main(int argc, char *argv[]) {
     // d1 d2  -> nom_prog + chemin + d1 + d2
   int i =2;
-  int y=2;
-  for(y; y<argc;y++)
-    {
-  printf("%s\n", argv[y]);    
-    }
 
+  printf("NOMBRE ARG : %d\n", argc);
+for (int y=0; y<argc; y++)
+  {
+    printf("ARG %d = %s\n", y, argv[y]);
+  }
   
   // Récupérer les arguments dans des varr globales ?
   char *chemin_csv = argv[1]; 
@@ -38,13 +38,16 @@ int main(int argc, char *argv[]) {
     }
 
     if(strcmp(argv[i], "-l") == 0)
-    {
+    {  
+      printf("Traitement l en cours\n");
       traitement_l(chemin_csv);
     }
 
     if(strcmp(argv[i], "-t") == 0)
     {
+      printf("Traitement t en cours\n");
       traitement_t(chemin_csv);
+      printf("Seg Fault Fin T?\n");
     }
 
     if(strcmp(argv[i], "-s") == 0)
@@ -52,6 +55,7 @@ int main(int argc, char *argv[]) {
       traitement_s(chemin_csv);
     }
   }
+  printf("Seg Fault fin prog\n");
 //Fin du programme -> time
 return 0;
 }
