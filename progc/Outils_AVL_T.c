@@ -1,12 +1,91 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Traitements.h"
+#include "Outils_AVL_T.h"
 
-//AVL
 
+
+
+
+//------------------------------ Traitement t ---------------------//
+
+#define ligne_taille_max 5000 
+char chemin_fichierT[50] ="./data/";
+
+
+void traitement_t(char *fichier) 
+{
+
+
+  if(strcmp(chemin_fichierT, "./data/") == 0)
+  {
+    strcat(chemin_fichierT,fichier);
+    strcat(chemin_fichierT, ".csv");
+  }
+
+  FILE* file = fopen(chemin_fichierT, "r");
+  if (file == NULL)
+  {
+    perror("ERREUR : impossible d'ouvrir le fichier csv");
+    exit(EXIT_FAILURE);
+  }
+
+  char ligne[ligne_taille_max];
+
+  //Ignorer la première ligne -> présentation des colones
+  fgets(ligne, ligne_taille_max, file);
+
+  char TownA[50];
+  char TownB[50];
+
+  int *h = 0;
+  Arbre* node = NULL;
+  while (fgets(ligne, ligne_taille_max, file) != NULL)
+    {
+      sscanf(ligne, "%*[^;];%*[^;];%s;%s;%*[^;];%*[^;]", TownA, TownB);
+      node = insertion(node, TownA, h, 0); 
+      node = equilibrageAVL(node);
+      node = insertion(node, TownB, h, 1); 
+      node = equilibrageAVL(node);
+    }
+
+  fclose(file);
+  //Avoir les 10 villes les + visités
+  Ville* tableau[10];
+  int i = 0;
+  postfixeFilsDroit(node,tableau ,i);
+
+  freeTree(node);
+
+  //On met les infos dans le fichier .txt temporaire
+  FILE* fichier_temp;
+  fichier_temp = fopen("./temp/data_t.txt", "w");
+    if (fichier_temp == NULL)
+    {
+      perror("ERREUR : impossible d'ouvrir le fichier csv");
+      exit(EXIT_FAILURE);
+    }
+
+    //On met les infos dans le fichier .txt temporaire
+    for(int y=0; y<10; y++)
+      {
+        fprintf(fichier_temp, "%s;%d;%d", tableau[y]->nomVille, tableau[y]->nbTrajets, tableau[y]->nbDepart);
+      }
+    fclose(fichier_temp);
+
+}
+
+
+
+//----------------------------------------------------------------//
+
+
+
+
+
+//
 // Creer arbre
-Arbre *creerArbre(char* nomVille) {
+Arbre* creerArbre(char* nomVille) {
   Arbre *node = malloc(sizeof(Arbre));
   strcpy(node->nomVille, nomVille);
   node->left = NULL;
@@ -21,7 +100,7 @@ Arbre *creerArbre(char* nomVille) {
 //                              Operations
 
 // Obtenir les 10 plus grandes villes:
-void postfixeFilsDroit(Arbre *node, Ville* tableau , int *i) 
+void postfixeFilsDroit(Arbre* node, Ville* tableau , int* i) 
 {
   if (node == NULL || *i>=10)
   {
@@ -40,7 +119,7 @@ void postfixeFilsDroit(Arbre *node, Ville* tableau , int *i)
 }
 
 // Insertion
-Arbre *insertion(Arbre *node, char* nomVille, int* h, int depart) 
+Arbre* insertion(Arbre* node, char* nomVille, int* h, int depart) 
 {
   if(node == NULL)
   {

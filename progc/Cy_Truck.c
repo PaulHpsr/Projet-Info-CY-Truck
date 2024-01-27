@@ -4,6 +4,8 @@
 
 //Headers
 #include "Traitements.h"
+#include "Outils_AVL_T.h"
+#include "Outils_AVL_S.h"
 
 
 

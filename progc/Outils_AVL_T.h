@@ -10,8 +10,7 @@ int nbrDepart; //nombre de fois ou la ville est départ
 struct _avl_t* left;
 struct _avl_t* right;
 int eq; //equilibre
-} Arbre;
-
+}Arbre;
 
 //Outil_AVL_T -> fonct° + struct AVL pour traitement T
 typedef struct VilleStats
@@ -20,19 +19,26 @@ char nomVille[50];
 int nbTrajets;
 int nbDepart;
 }Ville;
+//--------------------- TRAITEMENT T ---------------------//
+
+void traitement_t(char *);
+
+//---------------------------------------------------------//
 
 
-
-Arbre *creerArbre();
-Arbre *insertion();
-Arbre* rotationGauche();
-Arbre* rotationDroite();
-Arbre* rotationDoubleGauche();
-Arbre* rotationDoubleDroit();
-Arbre* equilibrageAVL();
+//--------------------- AVL T ---------------------//
+Arbre* creerArbre(char*);
+Arbre* insertion(Arbre*, char*, int*, int);
+Arbre* rotationGauche(Arbre*);
+Arbre* rotationDroite(Arbre*);
+Arbre* rotationDoubleGauche(Arbre*);
+Arbre* rotationDoubleDroit(Arbre*);
+Arbre* equilibrageAVL(Arbre*);
 
 //
-void postfixeFilsDroit(); 
-void freeTree();
+void postfixeFilsDroit(Arbre*, Ville*, int*); 
+void freeTree(Arbre*);
+
+//---------------------------------------------------------//
 
 #endif

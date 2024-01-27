@@ -1,22 +1,94 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Traitements.h"
+#include "Outils_AVL_S.h"
+
+
+
+
+
+//------------------------------ Traitement S ---------------------//
+
+
+#define ligne_taille_max 5000 
+char chemin_fichierS[50] ="./data/";
+
+//
+void traitement_s(char *fichier) 
+{
+  if(strcmp(chemin_fichierS, "./data/") == 0)
+  {
+    strcat(chemin_fichierS,fichier);
+    strcat(chemin_fichierS, ".csv");
+  }
+
+  FILE* file = fopen(chemin_fichierS, "r");
+  if (file == NULL)
+  {
+    perror("ERREUR : impossible d'ouvrir le fichier csv");
+    exit(EXIT_FAILURE);
+  }
+
+  char ligne[ligne_taille_max];
+
+  //Ignorer la première ligne -> présentation des colones
+  fgets(ligne, ligne_taille_max, file);
+
+  Trajet* trajetCurrent;
+
+  int *h = 0;
+  Node* node = NULL;
+  while (fgets(ligne, ligne_taille_max, file) != NULL)
+    {
+      sscanf(ligne, "%d;%*[^;];%*[^;];%*[^;];%f;%*[^;]", trajetCurrent->id, trajetCurrent->distance);
+      node = insertionS(node,trajetCurrent, h); 
+//Mettre équilibrage AVL
+node = equilibrageAVLS(node);
+    }
+
+  fclose(file);
+  //Avoir les 10 villes les + visités
+  TrajetFinal* tableau[10];
+  int i = 0;
+  postfixeFilsDroitS(node,tableau ,i);
+
+  freeTreeS(node);
+
+  //On met les infos dans le fichier .txt temporaire
+  FILE* fichier_temp;
+  fichier_temp = fopen("./temp/data_s.txt", "w");
+    if (fichier_temp == NULL)
+    {
+      perror("ERREUR : impossible d'ouvrir le fichier csv");
+      exit(EXIT_FAILURE);
+    }
+
+    //On met les infos dans le fichier .txt temporaire
+    for(int y=0; y<10; y++)
+      {
+        fprintf(fichier_temp, "%d;%f;%f;%f", tableau[y]->id, tableau[y]->min, tableau[y]->max, tableau[y]->moy);
+      }
+    fclose(fichier_temp);
+
+}
+
+//----------------------------------------------------------------//
+
 
 
 //Outils AVL_S:
 //Créa node :
-Node *newNode(Trajet data) {
+Node* newNode(Trajet* data) {
   Node *node = (Node *)malloc(sizeof(Node));
-  node->id = data.id;
-  node->max=0;
+  node->id = data->id;
+  node->max=data->distance;
   node->min=0;
   node->left = NULL;
   node->right = NULL;
   return node;
 }
 
-Node *insertionS(Node *node, Trajet data, int* h) 
+Node* insertionS(Node* node, Trajet* data, int* h) 
 {
   if(node == NULL)
   {
@@ -24,31 +96,31 @@ Node *insertionS(Node *node, Trajet data, int* h)
     return newNode(data);
   }
 
-  if (data.id < node->id)
+  if (data->id < node->id)
   {
     node->left = insertionS(node->left, data, h);
     *h = -*h;
   }
-  else if (data.id > node->id)
+  else if (data->id > node->id)
   {
     node->right = insertionS(node->right, data, h);
   }
-  else if (data.id == node->id)
+  else if (data->id == node->id)
   {
     *h=0;
     //L'id trajet est déjà présent dans l'arbre -> on va vérif si distance > ou <
 
     //Verif max
-    if (data.distance > node->max)
+    if (data->distance > node->max)
     {
-    node->max = data.distance;
+    node->max = data->distance;
 
     }
 
 
-    if(data.distance<node->min)
+    if(data->distance<node->min)
     {
-      node->min = data.distance;
+      node->min = data->distance;
     }
   }
   if(*h != 0)
@@ -146,12 +218,13 @@ Node* equilibrageAVLS(Node* a)
   return a;
 }
 
-void postfixeFilsDroitS(Node *node, TrajetFinal* tableau, int* i) 
+void postfixeFilsDroitS(Node* node, TrajetFinal* tableau, int* i) 
 {
-  if (node == NULL)
+  if (node == NULL || *i>=10)
   {
     return;
   }
+
   //Parcourir tt les fils droit (plus grande valeure)
   postfixeFilsDroitS(node->right, tableau, i);
 
@@ -165,7 +238,7 @@ void postfixeFilsDroitS(Node *node, TrajetFinal* tableau, int* i)
   (*i)++;
 }
 
-void freeTreeS(Node *root) {
+void freeTreeS(Node* root) {
     if (root == NULL)
         return;
 
