@@ -42,7 +42,6 @@ void traitement_t(char *fichier)
   *h=0;
   Arbre* node = NULL;
 
-  int b=0;
   while (fgets(ligne, ligne_taille_max, file) != NULL) {
     char *token = strtok(ligne, ";");
     if (token != NULL) {
@@ -69,7 +68,6 @@ void traitement_t(char *fichier)
         node = equilibrageAVL(node);
         node = insertion(node, TownB, h, 1); 
         node = equilibrageAVL(node);
-        b++;
       }
     }
   }
@@ -131,8 +129,10 @@ Arbre* creerArbre(char* nomVille) {
 //                              Operations
 
 // Obtenir les 10 plus grandes villes:
-void postfixeFilsDroit(Arbre* node, Ville tableau[], int *i) {
-  if (node == NULL || *i >= 10) {
+void postfixeFilsDroit(Arbre* node, Ville tableau[], int *i) 
+{
+  if (node == NULL || *i >= 10) 
+  {
     return;
   }
 
@@ -140,7 +140,8 @@ void postfixeFilsDroit(Arbre* node, Ville tableau[], int *i) {
   postfixeFilsDroit(node->right, tableau, i);
 
   // Vérifier à nouveau la condition après le parcours du fils droit
-  if (*i >= 10) {
+  if (*i >= 10) 
+  {
     return;
   }
 
@@ -216,7 +217,7 @@ Arbre* rotationGauche(Arbre* a)
   eq_a = a->eq;
   eq_p = pivot->eq;
   a->eq = eq_a - fmax(eq_p, 0) - 1;
-  pivot->eq = eq_p - fmin(fmin(eq_a - 2 , eq_a+eq_p-2), eq_p - 1);
+  pivot->eq = fmin(fmin(eq_a - 2 , eq_a+eq_p-2), eq_p - 1);
   a = pivot;
   return a;
 }
@@ -233,7 +234,7 @@ Arbre* rotationDroite(Arbre* a)
   eq_a = a->eq;
   eq_p = pivot->eq;
   a->eq = eq_a - fmin(eq_p, 0) + 1;
-  pivot->eq = eq_p - fmax(fmax(eq_a + 2 , eq_a+eq_p+2), eq_p + 1);
+  pivot->eq = fmax(fmax(eq_a + 2 , eq_a+eq_p+2), eq_p + 1);
   a = pivot;
   return a;
 }
@@ -248,7 +249,7 @@ Arbre* rotationDoubleGauche(Arbre* a)
 Arbre* rotationDoubleDroit(Arbre* a)
 {
   a->left = rotationGauche(a->left);
-  return rotationGauche(a);
+  return rotationDroite(a);
 }
 
 // Equilibrage
@@ -289,11 +290,13 @@ Arbre* equilibrageAVL(Arbre* a)
 
 // Fonction pour libérer la mémoire occupée par les nœuds de l'AVL
 void freeTree(Arbre *root) {
-    if (root == NULL)
-        return;
-
-    freeTree(root->left);
-    freeTree(root->right);
-    free(root);
+  if (root == NULL)
+  {
+     return;
+  }
+  
+  freeTree(root->left);
+  freeTree(root->right);
+  free(root);
 }
 

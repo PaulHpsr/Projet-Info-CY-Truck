@@ -30,45 +30,52 @@ void traitement_s(char *fichier)
   }
 
   char ligne[ligne_taille_max];
-
   //Ignorer la première ligne -> présentation des colones
   fgets(ligne, ligne_taille_max, file);
 
-  Trajet* trajetCurrent;
+  Trajet* trajetCurrent = malloc(sizeof(Trajet));
 
-  int *h = 0;
+  int* h =malloc(sizeof(int));
+  *h=0;
   Node* node = NULL;
-  while (fgets(ligne, ligne_taille_max, file) != NULL)
+  
+   while (fgets(ligne, ligne_taille_max, file) != NULL)
     {
-      sscanf(ligne, "%d;%*[^;];%*[^;];%*[^;];%f;%*[^;]", trajetCurrent->id, trajetCurrent->distance);
+      sscanf(ligne, "%d;%*[^;];%*[^;];%*[^;];%f;%*[^;]", &trajetCurrent->id, &trajetCurrent->distance);
+      
       node = insertionS(node,trajetCurrent, h); 
-//Mettre équilibrage AVL
-node = equilibrageAVLS(node);
+      //Mettre équilibrage AVL
+      node = equilibrageAVLS(node);
     }
 
   fclose(file);
   //Avoir les 10 villes les + visités
-  TrajetFinal* tableau[10];
-  int i = 0;
-  postfixeFilsDroitS(node,tableau ,i);
+  
+  TrajetFinal tableau[50];
+  int* z = malloc(sizeof(int));
+  *z = 0;
+    postfixeFilsDroitS(node,tableau ,z);  
 
   freeTreeS(node);
+  free(h);
+  free(z);
 
   //On met les infos dans le fichier .txt temporaire
   FILE* fichier_temp;
   fichier_temp = fopen("./temp/data_s.txt", "w");
-    if (fichier_temp == NULL)
+  if (fichier_temp == NULL)
+  {
+    perror("ERREUR : impossible d'ouvrir le fichier csv");
+    exit(EXIT_FAILURE);
+  }
+
+  //On met les infos dans le fichier .txt temporaire
+  for(int y=0; y<50; y++)
     {
-      perror("ERREUR : impossible d'ouvrir le fichier csv");
-      exit(EXIT_FAILURE);
+      fprintf(fichier_temp, "%d;%f;%f;%f\n", tableau[y].id, tableau[y].min, tableau[y].max, tableau[y].moy);
     }
 
-    //On met les infos dans le fichier .txt temporaire
-    for(int y=0; y<10; y++)
-      {
-        fprintf(fichier_temp, "%d;%f;%f;%f", tableau[y]->id, tableau[y]->min, tableau[y]->max, tableau[y]->moy);
-      }
-    fclose(fichier_temp);
+  fclose(fichier_temp);
 
 }
 
@@ -79,12 +86,18 @@ node = equilibrageAVLS(node);
 //Outils AVL_S:
 //Créa node :
 Node* newNode(Trajet* data) {
-  Node *node = (Node *)malloc(sizeof(Node));
+  Node *node = malloc(sizeof(Node));
+  if (node == NULL) 
+  {
+    fprintf(stderr, "Erreur d'allocation mémoire\n");
+    exit(EXIT_FAILURE);
+  }
   node->id = data->id;
   node->max=data->distance;
-  node->min=0;
+  node->min=data->distance;
   node->left = NULL;
   node->right = NULL;
+  node->eq = 0;
   return node;
 }
 
@@ -93,7 +106,8 @@ Node* insertionS(Node* node, Trajet* data, int* h)
   if(node == NULL)
   {
     *h = 1;
-    return newNode(data);
+    node =  newNode(data);
+    return node;
   }
 
   if (data->id < node->id)
@@ -151,7 +165,7 @@ Node* rotationGaucheS(Node* a)
   eq_a = a->eq;
   eq_p = pivot->eq;
   a->eq = eq_a - fmax(eq_p, 0) - 1;
-  pivot->eq = eq_p - fmin(fmin(eq_a - 2 , eq_a+eq_p-2), eq_p - 1);
+  pivot->eq = fmin(fmin(eq_a - 2 , eq_a+eq_p-2), eq_p - 1);
   a = pivot;
   return a;
 }
@@ -167,8 +181,9 @@ Node* rotationDroiteS(Node* a)
   pivot->right = a;
   eq_a = a->eq;
   eq_p = pivot->eq;
+
   a->eq = eq_a - fmin(eq_p, 0) + 1;
-  pivot->eq = eq_p - fmax(fmax(eq_a + 2 , eq_a+eq_p+2), eq_p + 1);
+  pivot->eq = fmax(fmax(eq_a + 2 , eq_a+eq_p+2), eq_p + 1);
   a = pivot;
   return a;
 }
@@ -183,44 +198,49 @@ Node* rotationDoubleGaucheS(Node* a)
 Node* rotationDoubleDroitS(Node* a)
 {
   a->left = rotationGaucheS(a->left);
-  return rotationGaucheS(a);
+  return rotationDroiteS(a);
 }
 
 // Equilibrage
 Node* equilibrageAVLS(Node* a)
 {
-  if(a!=NULL)
-  { // Équilibrer les sous-arbres
+  if(a!= NULL)
+  {
+
+    // Équilibrer les sous-arbres
     a->left = equilibrageAVLS(a->left);
     a->right = equilibrageAVLS(a->right);
-    
-   if(a->eq >= 2)
+  if(a->eq >= 2)
+  {
+    if(a->right->eq >= 0)
     {
-      if(a->right->eq >= 0)
-      {
-       return rotationGaucheS(a);
-     }
-     else{
-        return rotationDoubleGaucheS(a);
-     }
+      return rotationGaucheS(a);
     }
+    else
+    {
+      return rotationDoubleGaucheS(a);
+    }
+  }
+  else if(a-> eq <= -2)
+  {
 
-    else if(a-> eq <= -2)
+    if(a->left->eq <= 0)
     {
-      if(a->left->eq <= 0){
-        return rotationDroiteS(a);
-      }
-      else{
-        return rotationDoubleDroitS(a);
-      }
+      a = rotationDroiteS(a);
+      return a;
     }
+    else
+    {
+      return rotationDoubleDroitS(a);
+    }
+  }
   }
   return a;
 }
 
 void postfixeFilsDroitS(Node* node, TrajetFinal* tableau, int* i) 
 {
-  if (node == NULL || *i>=10)
+  if (node == NULL || *i>=49)
   {
     return;
   }
@@ -228,6 +248,10 @@ void postfixeFilsDroitS(Node* node, TrajetFinal* tableau, int* i)
   //Parcourir tt les fils droit (plus grande valeure)
   postfixeFilsDroitS(node->right, tableau, i);
 
+  if (*i >= 49) 
+  {
+    return;
+  }
   //Pareil mais avec le fils gauche 
   postfixeFilsDroitS(node->left, tableau, i);
 
@@ -239,10 +263,12 @@ void postfixeFilsDroitS(Node* node, TrajetFinal* tableau, int* i)
 }
 
 void freeTreeS(Node* root) {
-    if (root == NULL)
-        return;
+  if (root == NULL)
+  {
+    return;
+  }
 
-    freeTreeS(root->left);
-    freeTreeS(root->right);
-    free(root);
+  freeTreeS(root->left);
+  freeTreeS(root->right);
+  free(root);
 }
