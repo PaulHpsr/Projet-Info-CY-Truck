@@ -23,7 +23,7 @@ void traitement_d1(char *fichier) {
     char driverNom[100];
     char driverPrenom[100];
 
-      DriverInfos drivers[200];
+      DriverInfos drivers[500000];
       int nbDrivers = 0;
 
       char ligne[ligne_taille_max];
@@ -126,7 +126,7 @@ void traitement_d2(char *fichier)
   char driverNom[100];
   char driverPrenom[100];
 
-  DriverInfosD2 drivers[200];
+  DriverInfosD2 drivers[500000];
   int nbDrivers = 0;
 
   char ligne[ligne_taille_max];
