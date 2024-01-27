@@ -74,27 +74,30 @@ void traitement_t(char *fichier)
     }
   }
   fclose(file);
-  //Avoir les 10 villes les + visités
+  // Avoir les 10 villes les + visitées
   Ville tableau[10];
-  
-  int i = 0;
-  postfixeFilsDroit(node, tableau, &i);
+
+    int* z = malloc(sizeof(int));
+    *z = 0;
+    postfixeFilsDroit(node, tableau, z); 
 
   freeTree(node);
-  //On met les infos dans le fichier .txt temporaire
+  free(h);
+  free(z);
+
+  // On met les infos dans le fichier .txt temporaire
   FILE* fichier_temp;
   fichier_temp = fopen("./temp/data_t.txt", "w");
-    if (fichier_temp == NULL)
-    {
-      perror("ERREUR : impossible d'ouvrir le fichier csv");
-      exit(EXIT_FAILURE);
-    }
-    //On met les infos dans le fichier .txt temporaire
-    for(int y=0; y<10; y++)
-      {
-        fprintf(fichier_temp, "%s;%d;%d\n", tableau[y].nomVille, tableau[y].nbTrajets, tableau[y].nbDepart);
-      }
-    fclose(fichier_temp);
+  if (fichier_temp == NULL) {
+    perror("ERREUR : impossible d'ouvrir le fichier temporaire");
+    exit(EXIT_FAILURE);
+  }
+
+  // On met les infos dans le fichier .txt temporaire
+  for (int y = 0; y < 10; y++) {
+    fprintf(fichier_temp, "%s;%d;%d\n", tableau[y].nomVille, tableau[y].nbTrajets, tableau[y].nbDepart);
+  }
+  fclose(fichier_temp);
 }
 
 
@@ -133,10 +136,15 @@ void postfixeFilsDroit(Arbre* node, Ville tableau[], int *i) {
     return;
   }
 
-  // Parcourir tous les fils droits (plus grande valeur)
+  // Parcourir le fils droit en premier
   postfixeFilsDroit(node->right, tableau, i);
 
-  // Pareil mais avec le fils gauche 
+  // Vérifier à nouveau la condition après le parcours du fils droit
+  if (*i >= 10) {
+    return;
+  }
+
+  // Parcourir le fils gauche après avoir traité le fils droit
   postfixeFilsDroit(node->left, tableau, i);
 
   tableau[*i].nbDepart = node->nbrDepart;
