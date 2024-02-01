@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Définir la locale pour le format numérique
+export LC_NUMERIC="en_US.UTF-8"
+
 #---------------------------- Initialisation des variables --------------------
 
 # Répertoire contenant le script en cours d'éxécution

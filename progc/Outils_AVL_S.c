@@ -45,9 +45,8 @@ void traitement_s(char *fichier)
       
       node = insertionS(node,trajetCurrent, h); 
       //Mettre équilibrage AVL
-      node = equilibrageAVLS(node);
     }
-
+  node = equilibrageAVLS(node);
   fclose(file);
   //Avoir les 10 villes les + visités
   

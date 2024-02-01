@@ -5,8 +5,6 @@
 
 
 
-
-
 //------------------------------ Traitement t ---------------------//
 
 #define ligne_taille_max 5000 
@@ -35,8 +33,8 @@ void traitement_t(char *fichier)
   //Ignorer la première ligne -> présentation des colones
   fgets(ligne, ligne_taille_max, file);
 
-  char TownA[50];
-  char TownB[50];
+  char* TownA = malloc(sizeof(char)*50);
+  char* TownB = malloc(sizeof(char)*50);
 
   int* h = malloc(sizeof(int));
   *h=0;
@@ -65,13 +63,14 @@ void traitement_t(char *fichier)
 
         //insertion + d'équilibrage 
         node = insertion(node, TownA, h, 0); 
-        node = equilibrageAVL(node);
         node = insertion(node, TownB, h, 1); 
-        node = equilibrageAVL(node);
       }
     }
+    node = equilibrageAVL(node);
   }
   fclose(file);
+  free(TownA);
+  free(TownB);
   // Avoir les 10 villes les + visitées
   Ville tableau[10];
 
@@ -166,7 +165,7 @@ Arbre* insertion(Arbre* node, char* nomVille, int* h, int depart)
     return node;
   }
   int comparaison = strcmp(nomVille, node->nomVille);
-  
+
   if (comparaison != 0)
   {
     if(node->nbrTrajets >= 1){
@@ -187,7 +186,7 @@ Arbre* insertion(Arbre* node, char* nomVille, int* h, int depart)
       node->nbrDepart++;
     }
   }
-  
+
   if(*h != 0)
   {
     node->eq = node->eq + *h;
@@ -259,9 +258,11 @@ Arbre* equilibrageAVL(Arbre* a)
   {
 
     // Équilibrer les sous-arbres
-    a->left = equilibrageAVL(a->left);
-    a->right = equilibrageAVL(a->right);
-    
+    if (a->left != NULL)
+      a->left = equilibrageAVL(a->left);
+    if (a->right != NULL)
+      a->right = equilibrageAVL(a->right);
+
   if(a->eq >= 2)
   {
     if(a->right->eq >= 0)
@@ -294,7 +295,7 @@ void freeTree(Arbre *root) {
   {
      return;
   }
-  
+
   freeTree(root->left);
   freeTree(root->right);
   free(root);

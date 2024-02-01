@@ -35,7 +35,6 @@ for (int y=0; y<argc; y++)
       traitement_s(chemin_csv);
     }
   }
-  printf("Seg Fault fin prog\n");
 //Fin du programme -> time
 return 0;
 }
