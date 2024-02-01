@@ -280,7 +280,7 @@ shell_d1()
 start=$(date +%s)
 
 sort -n -t';' -k1 "$chemin_csv" | cut -d';' -f1,6 > "./temp/tmpD1.csv"
-awk -F';' '{count[$3 "" $2]++} END {for (i in count) printf "%s;%d\n", i, count[i]}' "./temp/tmpD1.csv" | sort -nr -t';' -k2,2 | head -n10 > "./temp/data_d1.txt"
+awk -F';' '{count[$3 "" $2]++} END {for (i in count) printf "%s;%d\n", i, count[i]}' "./temp/tmpD1.csv" | sort -nr -t';' -k2,2 | head -n10 > "./temp/data_d1.dat"
 
 
 end=$(date +%s)
@@ -297,7 +297,7 @@ start=$(date +%s)
 
 sort -n -t';' -k6 "$chemin_csv" | cut -d';' -f6,5 > "./temp/tmpD2.csv"
 awk -F';' 'NR>1 {distances[$2]+=$1} END {for (driver in distances) print distances[driver]";", driver}' "./temp/tmpD2.csv" | sort -n -r -t';' -k1 | head -n10 > "./temp/data_d2_1.txt"
-awk -F';' '{temp=$1; $1=$2; $2=temp; printf "%s;%s\n", $1, $2}' "./temp/data_d2_1.txt" > "./temp/data_d2.txt"
+awk -F';' '{temp=$1; $1=$2; $2=temp; printf "%s;%s\n", $1, $2}' "./temp/data_d2_1.txt" > "./temp/data_d2.dat"
 
 
 
@@ -313,8 +313,9 @@ shell_l()
 
 start=$(date +%s)
 
-sort -n -t';' -k1 "$chemin_csv" | cut -d';' -f1,5,6 > "./temp/tmpL.csv"
-awk -F';' 'NR>1 {distances[$1]+=$2} END {for (id in distances) print id,";",distances[id]}' "./temp/tmpL.csv" | sort -n -r -t' ' -k2 | head -n10 > "./temp/data_l.txt"
+ cut -d';' -f1,5 "$chemin_csv" | sort -nr -t';' -k2,2  > "./temp/tmpL.csv"
+awk -F';' 'NR>1 {distances[$1]+=$2} END {for (id in distances) print id,";",distances[id]}' "./temp/tmpL.csv" | sort -n -r -t' ' -k2 | head -n10 > "./temp/data_l.dat"
+
 
 
 end=$(date +%s)
@@ -363,7 +364,7 @@ set bmargin 10
 set datafile separator ";"
 
 # Tracer l'histogramme verticale
-plot "$script_dir/temp/data_d1.txt" using 2:xticlabels(1) with boxes title "Nombre de trajets" 
+plot "$script_dir/temp/data_d1.dat" using 2:xticlabels(1) with boxes title "Nombre de trajets" 
 
 EOF
 convert "$script_dir/images/graphique_d1.png" -rotate 90 "$script_dir/images/graphique_d1.png"
@@ -397,7 +398,7 @@ set bmargin 10
 set datafile separator ";"
 
 # Tracer l'histogramme verticale
-plot "$script_dir/temp/data_d2.txt" using 2:xticlabels(1) with boxes title "Distance (Km)" 
+plot "$script_dir/temp/data_d2.dat" using 2:xticlabels(1) with boxes title "Distance (Km)" 
 
 EOF
 convert "$script_dir/images/graphique_d2.png" -rotate 90 "$script_dir/images/graphique_d2.png"
@@ -425,7 +426,7 @@ set title "Option -l : Distance = f(Route)"
 set datafile separator ";"
 
 # Tracer l'histogramme verticale
-plot "$script_dir/temp/data_l.txt" using 2:xticlabels(1) with boxes title "Nombre de trajets" #Utilise les données du txt pour histo verticale
+plot "$script_dir/temp/data_l.dat" using 2:xticlabels(1) with boxes title "Nombre de trajets" #Utilise les données du txt pour histo verticale
 
 EOF
 }
@@ -433,7 +434,7 @@ EOF
 #T
 traitement_gnuplot_t()
 {
-sort -t';' -k1,1n "$script_dir/temp/data_t.txt" > "$script_dir/temp/data_t_sorted.txt"
+sort -t';' -k1,1n "$script_dir/temp/data_t.txt" > "$script_dir/temp/data_t.dat"
 
 # Utilisation du fichier trié dans Gnuplot
 "$gnuplot_path" <<-EOF
@@ -459,7 +460,7 @@ set datafile separator ";"
 # Faire pivoter les étiquettes de l'axe des x de 45 degrés
 set xtics rotate by -45
 
-plot  "$script_dir/temp/data_t_sorted.txt" using 2:xtic(1) title 'Total trajets' lc rgb '#FF0000', '' using 3 title 'Trajets depuis' lc rgb '#0000FF'
+plot  "$script_dir/temp/data_t.dat" using 2:xtic(1) title 'Total trajets' lc rgb '#FF0000', '' using 3 title 'Trajets depuis' lc rgb '#0000FF'
 EOF
 }
 
@@ -471,29 +472,34 @@ traitement_gnuplot_s()
 
 
 # Tri du fichier
-sort -t';' -k4,4 -nr "$script_dir/temp/data_s.txt" > "$script_dir/temp/data_s_sorted.txt"
+sort -t';' -k5,5 -nr "$script_dir/temp/data_s.txt" | head -n50 > "$script_dir/temp/tempS.dat"
+awk '{print NR ";" $0}' "$script_dir/temp/tempS.dat" > "$script_dir/temp/data_s.dat"
 
 
 "$gnuplot_path" << EOF
-set terminal pngcairo enhanced font "arial,10" size 800,600
-set output "$script_dir/images/graphique_s.png"
-
-# Paramètres du graphique
-set boxwidth 0.5
-set yrange [0:*]
-set xlabel "ROUTE ID"
-set ylabel "DISTANCE (Km)"
-set title "Option -s : Distance = f(Route)"
-
-# Spécifier le délimiteur de colonnes
+set terminal pngcairo enhanced font 'Arial,12' size 1500,1200
+set output './images/graphique_s.png'
 set datafile separator ";"
 
-# Charger les données
-plot '$script_dir/temp/data_s_sorted.txt' using 1:2 with lines title "Minimum" lc rgb "red", \
-     '' using 1:3 with lines title "Maximum" lc rgb "blue", \
-     '' using 1:4 with lines title "Moyenne" lc rgb "green"
+set style data histograms
+set style fill solid border -1
+
+set title "option -s : Distance= f(Route)" 
+set xlabel "ROUTE ID" 
+set ylabel "DISTANCE (Km)" 
+
+set yrange [0:1000]
+set xtics rotate by 45 offset 0, -2
+set bmargin 4
+
+
+plot './temp/data_s.dat' using 1:4:xtic(2) with lines lc rgb "purple" lw 2 title 'Distance Average (Km)', \
+     './temp/data_s.dat' using 1:5 with lines lc rgb "blue" lw 2 title 'Distance Max/Min (Km)', \
+     './temp/data_s.dat' using 1:3 with lines lc rgb "blue" lw 2 notitle, \
+     './temp/data_s.dat' using 1:3:5 with filledcurves lc "skyblue" fs transparent solid 0.5 notitle
 EOF
 }
+
 
 
 #FONCTION CREA GRAPHIQUE
@@ -591,12 +597,12 @@ do
 
 
     -t)
-        time ./progc/CY_Truck "${nom_csv}" "${option_traitement[@]}"
+        time .""/progc/CY_Truck "${nom_csv}" "${option_traitement[@]}"
         ;;
 
 
     -s)
-        time ./progc/CY_Truck "${nom_csv}" "${option_traitement[@]}"
+        time .""/progc/CY_Truck "${nom_csv}" "${option_traitement[@]}"
         ;;
 
 

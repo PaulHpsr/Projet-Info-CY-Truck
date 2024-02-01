@@ -71,7 +71,7 @@ void traitement_s(char *fichier)
   //On met les infos dans le fichier .txt temporaire
   for(int y=0; y<50; y++)
     {
-      fprintf(fichier_temp, "%d;%f;%f;%f\n", tableau[y].id, tableau[y].min, tableau[y].max, tableau[y].moy);
+      fprintf(fichier_temp, "%d;%f;%f;%f;%f\n", tableau[y].id, tableau[y].min, tableau[y].moy, tableau[y].max, (tableau[y].max - tableau[y].min));
     }
 
   fclose(fichier_temp);
