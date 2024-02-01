@@ -268,12 +268,13 @@ traitement_gnuplot_d1()
 set terminal pngcairo enhanced font "arial,10" size 800,600
 set output "$script_dir/images/graphique_d1.png"
 
-# Spécifier le délimiteur de colonnes
-set datafile separator ";"
-
 # Paramètres du graphique
-set style data histograms
-set style fill solid border -1
+set style fill solid noborder
+set boxwidth 0.8 relative
+set yrange [0:*]
+set xlabel "Driver"
+set ylabel "Nb Routes"
+set title "Option -d1 : Nb routes = f(Driver)"
 
 set ytics right
 set xtics rotate by 90
@@ -281,24 +282,15 @@ set ytics rotate by 90
 
 set xtics offset 0,-9
 set bmargin 10
+# Spécifier le délimiteur de colonnes
+set datafile separator ";"
 
-set boxwidth 0.8 relative
-set yrange [0:250]
-set style line 1 lc rgb 'green' lt 1 lw 2
-set style fill solid noborder
-
-set xlabel "DRIVER NAMES"
-set ylabel "Nombre de trajets"
-set title "Option -d1 : NB routes = f(Driver)"
-
-
-
-# Tracer l'histogramme horizontal avec filledcurves
-plot "$script_dir/temp/data_d1.txt" sing 1:xtic(2)  with boxes linestyle 1 title "Nombre de trajets" lc rgb "blue"
+# Tracer l'histogramme verticale
+plot "$script_dir/temp/data_d1.txt" using 2:xticlabels(1) with boxes title "Nombre de trajets" 
 
 EOF
-
 convert "$script_dir/images/graphique_d1.png" -rotate 90 "$script_dir/images/graphique_d1.png"
+
 }
 
 traitement_gnuplot_d2()
@@ -314,29 +306,27 @@ traitement_gnuplot_d2()
 set terminal pngcairo enhanced font "arial,10" size 800,600
 set output "$script_dir/images/graphique_d2.png"
 
+# Paramètres du graphique
+set style fill solid noborder
+set boxwidth 0.8 relative
+set yrange [0:*]
+set xlabel "Driver"
+set ylabel "Distance (Km)"
+set title "Option -d1 : Distance = f(Driver)"
+
+set ytics right
+set xtics rotate by 90
+set ytics rotate by 90
+
+set xtics offset 0,-9
+set bmargin 10
 # Spécifier le délimiteur de colonnes
 set datafile separator ";"
 
-# Paramètres du graphique
-set style data histograms
-set style fill solid border -1
-set boxwidth 0.5
-set yrange [0:*]
-set ylabel "DRIVER NAMES"
-set xlabel "Distance (Km)"
-set title "Option -d2 : Distance = f(Driver)"
-set xtics rotate by 90
-set ytics rotate by 90
-set xtics offset 0,-9
-set bmargin 10
-set style line 1 lc rgb '#2ecc71' lt 1 lw 2
-set style fill solid noborder
-
-# Tracer l'histogramme horizontal avec filledcurves
-plot "$script_dir/temp/data_d2_sorted.txt" using 2:xtic(1) with boxes linestyle 1 title "Nombre de trajets" lc rgb "blue"
+# Tracer l'histogramme verticale
+plot "$script_dir/temp/data_d2.txt" using 2:xticlabels(1) with boxes title "Distance (Km)" 
 
 EOF
-
 convert "$script_dir/images/graphique_d2.png" -rotate 90 "$script_dir/images/graphique_d2.png"
 
 }
@@ -468,26 +458,18 @@ echo "EXECUTION DU PROGRAMME..."$'\n'
 echo "#-----------------------------------------------#"$'\n'
 
 
-for i in "${option_traitement[@]}";
-do
-    case "$i" in
-        -d1)
-        sort -n -t';' -k1 "$chemin_csv" | cut -d';' -f1,6 > "./temp/tmpD1.csv"
-awk -F';' '{count[$3";"$2]++} END {for (i in count) print count[i], i}' "./temp/tmpD1.csv" | sort -nr | head -n10 > "./temp/data_d1.txt"
-            ;;
-       -d2)
-       echo "d2"
       for i in "${option_traitement[@]}";
 do
     case "$i" in
         -d1)
         sort -n -t';' -k1 "$chemin_csv" | cut -d';' -f1,6 > "./temp/tmpD1.csv"
-        awk -F';' '{count[$3";"$2]++} END {for (i in count) print count[i], i}' "./temp/tmpD1.csv" | sort -nr | head -n10 > "./temp/data_d1.txt"
+awk -F';' '{count[$3 "" $2]++} END {for (i in count) printf "%s;%d\n", i, count[i]}' "./temp/tmpD1.csv" | sort -nr -t';' -k2,2 | head -n10 > "./temp/data_d1.txt"
             ;;
        -d2)
        echo "d2"
       sort -n -t';' -k6 "$chemin_csv" | cut -d';' -f6,5 > "./temp/tmpD2.csv"
-awk -F';' 'NR>1 {distances[$2]+=$1} END {for (driver in distances) print distances[driver]";", driver}' "./temp/tmpD2.csv" | sort -n -r -t';' -k1 | head -n10 > "./temp/data_d2.txt"
+awk -F';' 'NR>1 {distances[$2]+=$1} END {for (driver in distances) print distances[driver]";", driver}' "./temp/tmpD2.csv" | sort -n -r -t';' -k1 | head -n10 > "./temp/data_d2_1.txt"
+awk -F';' '{temp=$1; $1=$2; $2=temp; printf "%s;%s\n", $1, $2}' "./temp/data_d2_1.txt" > "./temp/data_d2.txt"
       ;;
         -l)
         echo "l"
@@ -508,26 +490,7 @@ awk -F';' 'NR>1 {distances[$2]+=$1} END {for (driver in distances) print distanc
           ;;
    esac
 done
-            ;;
-        -l)
-        echo "l"
-           sort -n -t';' -k1 "$chemin_csv" | cut -d';' -f1,5,6 > "./temp/tmpL.csv"
-           awk -F';' 'NR>1 {distances[$1]+=$2} END {for (id in distances) print id,";",distances[id]}' "./temp/tmpL.csv" | sort -n -r -t' ' -k2 | head -n10 > "./temp/data_l.txt"
-           ;;
-       -t)
-       echo "t"
-           time ./progc/CY_Truck "${nom_csv}" "${option_traitement[@]}"
-           ;;
-       -s)
-       echo "s"
-          time ./progc/CY_Truck "${nom_csv}" "${option_traitement[@]}"
-           ;;
-        \?)
-          echo "Option non reconnue : $i"$'\n'
-          show_help
-          ;;
-   esac
-done
+
 
 
 
