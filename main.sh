@@ -17,7 +17,7 @@ nom_csv=""
 
 #---------------------------- Gestion dossier --------------------
 
-fichiers=("Cy_Truck.c" "Makefile" "Outils_AVL_S.h" "Outils_AVL_T.h" "Outils_AVL_T.h" "Traitements.c" "Traitements.h" "Outils_AVL_S.c")
+fichiers=("Cy_Truck.c" "Makefile" "Outils_AVL_S.h" "Outils_AVL_T.h" "Outils_AVL_T.h" "Outils_AVL_S.c")
 
 existence_executable()
 {
@@ -258,7 +258,6 @@ traitement_gnuplot_d1()
 {
 #Format du txt : Conducteur;nb_trajet
 # Tri du fichier
-sort -t';' -k2,2 -nr "$script_dir/temp/data_d1.txt" | head -n 10 > "$script_dir/temp/data_d1_sorted.txt"
 
 # Utilisation du fichier trié dans Gnuplot
 "$gnuplot_path" <<-EOF
@@ -266,21 +265,37 @@ sort -t';' -k2,2 -nr "$script_dir/temp/data_d1.txt" | head -n 10 > "$script_dir/
 set terminal pngcairo enhanced font "arial,10" size 800,600
 set output "$script_dir/images/graphique_d1.png"
 
-# Paramètres du graphique
-set style fill transparent solid 0.5
-set boxwidth 0.5
-set yrange [0:*]
-set ylabel "DRIVER NAMES"
-set xlabel "Nombre de trajets"
-set title "Option -d1 : NB routes = f(Driver)"
-
 # Spécifier le délimiteur de colonnes
 set datafile separator ";"
 
+# Paramètres du graphique
+set style data histograms
+set style fill solid border -1
+
+set ytics right
+set xtics rotate by 90
+set ytics rotate by 90
+
+set xtics offset 0,-9
+set bmargin 10
+
+set boxwidth 0.8 relative
+set yrange [0:250]
+set style line 1 lc rgb 'green' lt 1 lw 2
+set style fill solid noborder
+
+set xlabel "DRIVER NAMES"
+set ylabel "Nombre de trajets"
+set title "Option -d1 : NB routes = f(Driver)"
+
+
+
 # Tracer l'histogramme horizontal avec filledcurves
-plot "$script_dir/temp/data_d1_sorted.txt" using 2:0:yticlabels(1) with filledcurves title "Nombre de trajets" lc rgb "blue"
+plot "$script_dir/temp/data_d1.txt" sing 1:xtic(2)  with boxes linestyle 1 title "Nombre de trajets" lc rgb "blue"
 
 EOF
+
+convert $script_dir/images/graphique_d1.png -rotate 90 $script_dir/images/graphique_d1.png
 }
 
 traitement_gnuplot_d2()
@@ -289,7 +304,6 @@ traitement_gnuplot_d2()
 #Trie le fichier decroissant
 
 # Script Gnuplot
-sort -t';' -k2,2 -nr "$script_dir/temp/data_d2.txt" | head -n 10 > "$script_dir/temp/data_d2_sorted.txt"
 
 # Utilisation du fichier trié dans Gnuplot
 "$gnuplot_path" <<-EOF
@@ -297,29 +311,36 @@ sort -t';' -k2,2 -nr "$script_dir/temp/data_d2.txt" | head -n 10 > "$script_dir/
 set terminal pngcairo enhanced font "arial,10" size 800,600
 set output "$script_dir/images/graphique_d2.png"
 
+# Spécifier le délimiteur de colonnes
+set datafile separator ";"
+
 # Paramètres du graphique
-set style fill transparent solid 0.5
+set style data histograms
+set style fill solid border -1
 set boxwidth 0.5
 set yrange [0:*]
 set ylabel "DRIVER NAMES"
 set xlabel "Distance (Km)"
 set title "Option -d2 : Distance = f(Driver)"
-
-# Spécifier le délimiteur de colonnes
-set datafile separator ";"
+set xtics rotate by 90
+set ytics rotate by 90
+set xtics offset 0,-9
+set bmargin 10
+set style line 1 lc rgb '#2ecc71' lt 1 lw 2
+set style fill solid noborder
 
 # Tracer l'histogramme horizontal avec filledcurves
-plot "$script_dir/temp/data_d2_sorted.txt" using 2:0:yticlabels(1) with filledcurves title "Nombre de trajets" lc rgb "blue"
+plot "$script_dir/temp/data_d2_sorted.txt" using 2:xtic(1) with boxes linestyle 1 title "Nombre de trajets" lc rgb "blue"
 
 EOF
+
+
+
 }
 
 traitement_gnuplot_l()
 {
-#Format du txt : Conducteur;nb_trajet
-# Tri du fichier
-sort -t';' -k2,2 -nr "$script_dir/temp/data_l.txt" | head -n 10 > "$script_dir/temp/data_l_sorted.txt"
-sort -t';' -k1,1n "$script_dir/temp/data_l_sorted.txt"
+#Format du txt : RouteID;nb_trajet
 # Utilisation du fichier trié dans Gnuplot
 "$gnuplot_path" <<-EOF
 
@@ -338,7 +359,7 @@ set title "Option -l : Distance = f(Route)"
 set datafile separator ";"
 
 # Tracer l'histogramme verticale
-plot "$script_dir/temp/data_l_sorted.txt" using 2:xticlabels(1) with boxes title "Nombre de trajets" #Utilise les données du txt pour histo verticale
+plot "$script_dir/temp/data_l.txt" using 2:xticlabels(1) with boxes title "Nombre de trajets" #Utilise les données du txt pour histo verticale
 
 EOF
 }
@@ -392,8 +413,7 @@ do
             traitement_gnuplot_d2
             ;;
         -l)
-        echo "l"
-           traitement_gnuplot_l
+        traitement_gnuplot_l
            ;;
        -t)
        echo "t"
@@ -443,7 +463,69 @@ fi
 echo "#-----------------------------------------------#"$'\n'
 echo "EXECUTION DU PROGRAMME..."$'\n'
 echo "#-----------------------------------------------#"$'\n'
-time ./progc/CY_Truck "${nom_csv}" "${option_traitement[@]}"
+
+
+for i in "${option_traitement[@]}";
+do
+    case "$i" in
+        -d1)
+        sort -n -t';' -k1 "$chemin_csv" | cut -d';' -f1,6 > "./temp/tmpD1.csv"
+awk -F';' '{count[$3";"$2]++} END {for (i in count) print count[i], i}' "./temp/tmpD1.csv" | sort -nr | head -n10 > "./temp/data_d1.txt"
+            ;;
+       -d2)
+       echo "d2"
+      for i in "${option_traitement[@]}";
+do
+    case "$i" in
+        -d1)
+        sort -n -t';' -k1 "$chemin_csv" | cut -d';' -f1,6 > "./temp/tmpD1.csv"
+        awk -F';' '{count[$3";"$2]++} END {for (i in count) print count[i], i}' "./temp/tmpD1.csv" | sort -nr | head -n10 > "./temp/data_d1.txt"
+            ;;
+       -d2)
+       echo "d2"
+      sort -n -t';' -k6 "$chemin_csv" | cut -d';' -f6,5 > "./temp/tmpD2.csv"
+awk -F';' 'NR>1 {distances[$2]+=$1} END {for (driver in distances) print distances[driver]";", driver}' "./temp/tmpD2.csv" | sort -n -r -t';' -k1 | head -n10 > "./temp/data_d2.txt"
+      ;;
+        -l)
+        echo "l"
+           sort -n -t';' -k1 "$chemin_csv" | cut -d';' -f1,5,6 > "./temp/tmpL.csv"
+           awk -F';' 'NR>1 {distances[$1]+=$2} END {for (id in distances) print id,";",distances[id]}' "./temp/tmpL.csv" | sort -n -r -t' ' -k2 | head -n10 > "./temp/data_l.txt"
+           ;;
+       -t)
+       echo "t"
+           time ./progc/CY_Truck "${nom_csv}" "${option_traitement[@]}"
+           ;;
+       -s)
+       echo "s"
+          time ./progc/CY_Truck "${nom_csv}" "${option_traitement[@]}"
+           ;;
+        \?)
+          echo "Option non reconnue : $i"$'\n'
+          show_help
+          ;;
+   esac
+done
+            ;;
+        -l)
+        echo "l"
+           sort -n -t';' -k1 "$chemin_csv" | cut -d';' -f1,5,6 > "./temp/tmpL.csv"
+           awk -F';' 'NR>1 {distances[$1]+=$2} END {for (id in distances) print id,";",distances[id]}' "./temp/tmpL.csv" | sort -n -r -t' ' -k2 | head -n10 > "./temp/data_l.txt"
+           ;;
+       -t)
+       echo "t"
+           time ./progc/CY_Truck "${nom_csv}" "${option_traitement[@]}"
+           ;;
+       -s)
+       echo "s"
+          time ./progc/CY_Truck "${nom_csv}" "${option_traitement[@]}"
+           ;;
+        \?)
+          echo "Option non reconnue : $i"$'\n'
+          show_help
+          ;;
+   esac
+done
+
 
 
 echo "#-----------------------------------------------#"$'\n'

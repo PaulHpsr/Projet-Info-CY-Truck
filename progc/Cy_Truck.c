@@ -3,7 +3,6 @@
 #include <string.h>
 
 //Headers
-#include "Traitements.h"
 #include "Outils_AVL_T.h"
 #include "Outils_AVL_S.h"
 
@@ -25,29 +24,10 @@ for (int y=0; y<argc; y++)
   // Traitement des options
   for(i; i<argc; i++)       //Parcourir pour effectuer chaques traitements
   {
-    if(strcmp(argv[i], "-d1") == 0)
-    {
-      printf("Traitement d1 en cours\n");
-      traitement_d1(chemin_csv);
-    }
-
-    if(strcmp(argv[i], "-d2") == 0)
-    {
-      printf("Traitement d2 en cours\n");
-      traitement_d2(chemin_csv);
-    }
-
-    if(strcmp(argv[i], "-l") == 0)
-    {  
-      printf("Traitement l en cours\n");
-      traitement_l(chemin_csv);
-    }
-
     if(strcmp(argv[i], "-t") == 0)
     {
       printf("Traitement t en cours\n");
       traitement_t(chemin_csv);
-      printf("Seg Fault Fin T?\n");
     }
 
     if(strcmp(argv[i], "-s") == 0)
