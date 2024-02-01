@@ -334,7 +334,7 @@ plot "$script_dir/temp/data_d2_sorted.txt" using 2:xtic(1) with boxes linestyle 
 
 EOF
 
-
+convert $script_dir/images/graphique_d2.png -rotate 90 $script_dir/images/graphique_d2.png
 
 }
 
