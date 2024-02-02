@@ -431,7 +431,7 @@ EOF
 #T
 traitement_gnuplot_t()
 {
-sort -t';' -k1,1n "$script_dir/temp/data_t.txt" > "$script_dir/temp/data_t.dat"
+sort -nr -t';' -k2,2 "$script_dir/temp/data_t.txt" | head -n10 | sort -n -t';' -k1,1 > "$script_dir/temp/data_t.dat"
 rm -r "./temp/data_t.txt"
 
 # Utilisation du fichier trié dans Gnuplot

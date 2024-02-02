@@ -50,21 +50,16 @@ void traitement_t(char *fichier)
       // Les prochains deux champs contiennent les noms de ville
       if (token != NULL) {
         // Vérif que la chaîne est correctement copiée et finie par le caractère nul
-        strncpy(TownA, token, sizeof(TownA) - 1);
-        TownA[sizeof(TownA) - 1] = '\0';
+        strcpy(TownA, token);
       }
 
       token = strtok(NULL, ";");
       if (token != NULL) {
         // Vérif que la chaîne est correctement copiée et finie par le caractère nul
-        strncpy(TownB, token, sizeof(TownB) - 1);
-        TownB[sizeof(TownB) - 1] = '\0';
-
-
-        //insertion + d'équilibrage 
-        node = insertion(node, TownA, h, 0); 
-        node = insertion(node, TownB, h, 1); 
+        strcpy(TownB, token);
       }
+      node = insertion(node, TownA, h, 0); 
+      node = insertion(node, TownB, h, 1); 
     }
   }
   node = equilibrageAVL(node); 
@@ -72,15 +67,7 @@ void traitement_t(char *fichier)
   free(TownA);
   free(TownB);
   // Avoir les 10 villes les + visitées
-  Ville tableau[10];
-    int* z = malloc(sizeof(int));
-    *z = 0;
-  
- postfixeFilsDroit(node, tableau, z);  
-  
-  freeTree(node);
-  free(h);
-  free(z);
+
   // On met les infos dans le fichier .txt temporaire
   FILE* fichier_temp;
   fichier_temp = fopen("./temp/data_t.txt", "w");
@@ -88,12 +75,16 @@ void traitement_t(char *fichier)
     perror("ERREUR : impossible d'ouvrir le fichier temporaire");
     exit(EXIT_FAILURE);
   }
- 
-  // On met les infos dans le fichier .txt temporaire
-  for (int y = 0; y < 10; y++) {
-    fprintf(fichier_temp, "%s;%d;%d\n", tableau[y].nomVille, tableau[y].nbTrajets, tableau[y].nbDepart);
-  }
+
+  
+ postfixeFilsDroit(node, fichier_temp);  
+
+
   fclose(fichier_temp);
+  
+  freeTree(node);
+  free(h);
+ 
 }
 
 
@@ -127,45 +118,24 @@ Arbre* creerArbre(char* nomVille) {
 //                              Operations
 
 // Obtenir les 10 plus grandes villes:
-void postfixeFilsDroit(Arbre* node, Ville tableau[], int *i) 
+void postfixeFilsDroit(Arbre* node, FILE* fichier_temp) 
 {
-  
-  if (node == NULL || *i >= 10) 
-  {
-    return;
+
+if(node != NULL)
+{
+  fprintf(fichier_temp, "%s;%d;%d\n", node->nomVille, node->nbrTrajets, node->nbrDepart);
+
+
+  if(node->right != NULL){
+    postfixeFilsDroit(node->right, fichier_temp); 
   }
-
-
-  if (node->right != NULL)
-  {
-    postfixeFilsDroit(node->right, tableau, i);
+  if(node->left != NULL){
+    postfixeFilsDroit(node->left, fichier_temp); 
   }
-
-  
-  if (*i >= 10) 
-  {
-    return;
-  }
-
- 
-  if (node->left != NULL)
-  {
-    postfixeFilsDroit(node->left, tableau, i);
-  }
-
-  
-  if (*i >= 10) 
-  {
-    return;
-  }
-
-
-
-  tableau[*i].nbDepart = node->nbrDepart;
-  tableau[*i].nbTrajets = node->nbrTrajets;
-  strcpy(tableau[*i].nomVille, node->nomVille);
-  (*i)++;
 }
+  
+}
+
 
 // Insertion
 Arbre* insertion(Arbre* node, char* nomVille, int* h, int depart) 

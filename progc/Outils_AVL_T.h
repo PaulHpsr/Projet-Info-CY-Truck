@@ -34,9 +34,8 @@ Arbre* rotationDroite(Arbre*);
 Arbre* rotationDoubleGauche(Arbre*);
 Arbre* rotationDoubleDroit(Arbre*);
 Arbre* equilibrageAVL(Arbre*);
-
 //
-void postfixeFilsDroit(Arbre* node, Ville tableau[], int *i);
+void postfixeFilsDroit(Arbre* , FILE*);
 void freeTree(Arbre*);
 
 //---------------------------------------------------------//
