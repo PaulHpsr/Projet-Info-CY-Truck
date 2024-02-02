@@ -488,10 +488,10 @@ set xtics rotate by 45 offset 0, -2
 set bmargin 4
 
 
-plot './temp/data_s.dat' using 1:4:xtic(2) with lines lc rgb "purple" lw 2 title 'Distance Average (Km)', \
-     './temp/data_s.dat' using 1:5 with lines lc rgb "blue" lw 2 title 'Distance Max/Min (Km)', \
-     './temp/data_s.dat' using 1:3 with lines lc rgb "blue" lw 2 notitle, \
-     './temp/data_s.dat' using 1:3:5 with filledcurves lc "skyblue" fs transparent solid 0.5 notitle
+plot './temp/data_s.dat' using 1:4:xtic(2) with lines lc rgb "blue" lw 2 title 'Distance Average (Km)', \
+     './temp/data_s.dat' using 1:5 with lines lc rgb "green" lw 2 title 'Distance Max/Min (Km)', \
+     './temp/data_s.dat' using 1:3 with lines lc rgb "green" lw 2 notitle, \
+     './temp/data_s.dat' using 1:3:5 with filledcurves lc "red" fs transparent solid 0.5 notitle
 EOF
 }
 
