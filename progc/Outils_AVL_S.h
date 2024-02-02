@@ -43,7 +43,7 @@ Node* rotationDroiteS(Node*);
 Node* rotationDoubleGaucheS(Node*);
 Node* rotationDoubleDroitS(Node*);
 Node* equilibrageAVLS(Node*);
-void postfixeFilsDroitS(Node*, TrajetFinal*, int* );
+void postfixeFilsDroitS(Node* , FILE*);
 void freeTreeS(Node*);
 
 //---------------------------------------------------------//

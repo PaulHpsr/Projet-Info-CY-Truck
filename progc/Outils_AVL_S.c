@@ -48,33 +48,23 @@ void traitement_s(char *fichier)
     }
   node = equilibrageAVLS(node);
   fclose(file);
-  //Avoir les 10 villes les + visités
   
-  TrajetFinal tableau[50];
-  int* z = malloc(sizeof(int));
-  *z = 0;
-    postfixeFilsDroitS(node,tableau ,z);  
-
-  freeTreeS(node);
-  free(h);
-  free(z);
 
   //On met les infos dans le fichier .txt temporaire
   FILE* fichier_temp;
-  fichier_temp = fopen("./temp/data_s.txt", "w");
+  fichier_temp = fopen("./temp/data_s.txt", "a");
   if (fichier_temp == NULL)
   {
     perror("ERREUR : impossible d'ouvrir le fichier csv");
     exit(EXIT_FAILURE);
   }
-
-  //On met les infos dans le fichier .txt temporaire
-  for(int y=0; y<50; y++)
-    {
-      fprintf(fichier_temp, "%d;%f;%f;%f;%f\n", tableau[y].id, tableau[y].min, tableau[y].moy, tableau[y].max, (tableau[y].max - tableau[y].min));
-    }
+    postfixeFilsDroitS(node, fichier_temp);  
 
   fclose(fichier_temp);
+  
+  freeTreeS(node);
+  free(h);
+
 
 }
 
@@ -237,39 +227,26 @@ Node* equilibrageAVLS(Node* a)
   return a;
 }
 
-void postfixeFilsDroitS(Node* node, TrajetFinal* tableau, int* i) 
+void postfixeFilsDroitS(Node* node, FILE* fichier_temp) 
 {
-  if (node == NULL || *i>=49)
+
+  if(node != NULL)
   {
-    return;
+    float moyenne = (node->min + node->max) / 2.0;
+    float min_max = (node->max-node->min);
+
+    
+    fprintf(fichier_temp, "%d;%f;%f;%f;%f\n", node->id, node->min, moyenne, node->max, min_max);
+
+    if(node->right != NULL){
+      postfixeFilsDroitS(node->right, fichier_temp); 
+    }
+    if(node->left != NULL){
+      postfixeFilsDroitS(node->left, fichier_temp); 
+    }
+
   }
 
-  if (node->right != NULL)
-  {
-    postfixeFilsDroitS(node->right, tableau, i);
-  }
-
-  if (*i >= 49) 
-  {
-    return;
-  }
-
-  
-  if (node->left != NULL)
-  {
-    postfixeFilsDroitS(node->left, tableau, i);
-  }
-  
-  if (*i >= 49) 
-  {
-    return;
-  }
-
-  tableau[*i].id= node->id;
-  tableau[*i].max = node->max;
-  tableau[*i].min = node->min;
-  tableau[*i].moy = (node->max - node->min)/2;
-  (*i)++;
 }
 
 void freeTreeS(Node* root) {
