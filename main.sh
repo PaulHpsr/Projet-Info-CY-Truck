@@ -340,7 +340,7 @@ traitement_gnuplot_d1()
 
 "$gnuplot_path" <<-EOF
 
-set terminal pngcairo enhanced font "arial,10" size 800,600
+set terminal pngcairo enhanced font "arial,12" size 1000,1000
 set output "$script_dir/images/graphique_d1.png"
 
 # Paramètres du graphique
@@ -374,7 +374,7 @@ traitement_gnuplot_d2()
 {
 "$gnuplot_path" <<-EOF
 
-set terminal pngcairo enhanced font "arial,10" size 800,600
+set terminal pngcairo enhanced font "arial,12" size 1000,1000
 set output "$script_dir/images/graphique_d2.png"
 
 # Paramètres du graphique
@@ -391,7 +391,7 @@ set ytics rotate by 90
 
 set xtics offset 0,-9
 set bmargin 10
-# Spécifier le délimiteur de colonnes
+
 set datafile separator ";"
 
 # Tracer l'histogramme verticale
@@ -408,8 +408,8 @@ traitement_gnuplot_l()
 {
 "$gnuplot_path" <<-EOF
 
-set terminal pngcairo enhanced font "arial,10" size 800,600 #Def. le terminal de sortie en .png en 800x600p
-set output "$script_dir/images/graphique_l.png" #Def. le fichier de sortie
+set terminal pngcairo enhanced font "arial,12" size 1000,1000 
+set output "$script_dir/images/graphique_l.png" 
 
 # Paramètres du graphique
 set style fill solid
@@ -419,11 +419,10 @@ set xlabel "ROUTE ID"
 set ylabel "DISTANCE (Km)"
 set title "Option -l : Distance = f(Route)"
 
-# Spécifier le délimiteur de colonnes
 set datafile separator ";"
 
 # Tracer l'histogramme verticale
-plot "$script_dir/temp/data_l.dat" using 2:xticlabels(1) with boxes title "Nombre de trajets" #Utilise les données du txt pour histo verticale
+plot "$script_dir/temp/data_l.dat" using 2:xticlabels(1) with boxes title "Nombre de trajets" #
 
 EOF
 }
@@ -437,7 +436,7 @@ rm -r "./temp/data_t.txt"
 # Utilisation du fichier trié dans Gnuplot
 "$gnuplot_path" <<-EOF
 
-set terminal pngcairo enhanced font "arial,10" size 800,600
+set terminal pngcairo enhanced font "arial,12" size 1000,1000
 set output "$script_dir/images/graphique_t.png"
 set title 'Option -t : Nb routes = f(Towns)'
 set style data histogram
@@ -449,13 +448,12 @@ set xlabel 'Villes'
 set ylabel 'Nombre de trajets'
 set key top left
 
-# Utilisation du format "#AARRGGBB" pour définir l'opacité des barres
 set style fill transparent solid 0.5 noborder
 
-# Spécifier le délimiteur de colonnes
+
 set datafile separator ";"
 
-# Faire pivoter les étiquettes de l'axe des x de 45 degrés
+
 set xtics rotate by -45
 
 plot  "$script_dir/temp/data_t.dat" using 2:xtic(1) title 'Total trajets' lc rgb '#FF0000', '' using 3 title 'Trajets depuis' lc rgb '#0000FF'
