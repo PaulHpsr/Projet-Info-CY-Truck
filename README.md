@@ -37,7 +37,7 @@ Pour finir, les graphiques générés par le programme seront stockés dans le d
 
 Notre programme possèdes certaines limitations fonctionnelles :
 - Le fichier CSV doit être structuré selon le format suivant : Route ID;Step ID;Town A;Town B;Distance;Driver name
-- Il se peut que le traitement T prenne plus de temps que prévu
+- Le traitement T prend beaucoup de temps
 
 ## Auteurs
 CY-Tech | MI2
