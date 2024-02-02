@@ -5,8 +5,8 @@
 ## Pré-requis 
 
 Il est nécessaire d'avoir les fichiers et documents suivants afin que le programme fonctionne correctement :
-- images
-- data
+- images (si non présent -> créé par le programme)
+- data   (il faut le créer manuellement si non présent)
 - progc; dont : Cy_Truck.c (ne possède pas de .h), Makefile, Outils_AVL_S.c, Outils_AVL_T.c, Traitements.c et leurs .h respectifs
 - main.sh
 - gnuplot
@@ -36,10 +36,8 @@ Pour finir, les graphiques générés par le programme seront stockés dans le d
 ## Limitations fonctionnelles
 
 Notre programme possèdes certaines limitations fonctionnelles :
-- Le programme ne vérifie pas si gnuplot est installé ou non
-- Si gnuplot n'est pas présent le programme ne lance pas d'installation automatique de celui-ci
 - Le fichier CSV doit être structuré selon le format suivant : Route ID;Step ID;Town A;Town B;Distance;Driver name
-- Gnuplot ne permettant pas de créer un histogramme horizontal en barre, nous avons opté pour un histogramme horizontal avec courbe
+- Il se peut que le traitement T prenne plus de temps que prévu
 
 ## Auteurs
 CY-Tech | MI2
