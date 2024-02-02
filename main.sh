@@ -383,7 +383,7 @@ set boxwidth 0.8 relative
 set yrange [0:*]
 set xlabel "Driver"
 set ylabel "Distance (Km)"
-set title "Option -d1 : Distance = f(Driver)"
+set title "Option -d2 : Distance = f(Driver)"
 
 set ytics right
 set xtics rotate by 90
