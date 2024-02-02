@@ -66,22 +66,21 @@ void traitement_t(char *fichier)
         node = insertion(node, TownB, h, 1); 
       }
     }
-    node = equilibrageAVL(node);
   }
+  node = equilibrageAVL(node); 
   fclose(file);
   free(TownA);
   free(TownB);
   // Avoir les 10 villes les + visitées
   Ville tableau[10];
-
     int* z = malloc(sizeof(int));
     *z = 0;
-    postfixeFilsDroit(node, tableau, z); 
-
+  
+ postfixeFilsDroit(node, tableau, z);  
+  
   freeTree(node);
   free(h);
   free(z);
-
   // On met les infos dans le fichier .txt temporaire
   FILE* fichier_temp;
   fichier_temp = fopen("./temp/data_t.txt", "w");
@@ -89,7 +88,7 @@ void traitement_t(char *fichier)
     perror("ERREUR : impossible d'ouvrir le fichier temporaire");
     exit(EXIT_FAILURE);
   }
-
+ 
   // On met les infos dans le fichier .txt temporaire
   for (int y = 0; y < 10; y++) {
     fprintf(fichier_temp, "%s;%d;%d\n", tableau[y].nomVille, tableau[y].nbTrajets, tableau[y].nbDepart);
@@ -130,22 +129,37 @@ Arbre* creerArbre(char* nomVille) {
 // Obtenir les 10 plus grandes villes:
 void postfixeFilsDroit(Arbre* node, Ville tableau[], int *i) 
 {
+  
   if (node == NULL || *i >= 10) 
   {
     return;
   }
 
-  // Parcourir le fils droit en premier
-  postfixeFilsDroit(node->right, tableau, i);
 
-  // Vérifier à nouveau la condition après le parcours du fils droit
+  if (node->right != NULL)
+  {
+    postfixeFilsDroit(node->right, tableau, i);
+  }
+
+  
   if (*i >= 10) 
   {
     return;
   }
 
-  // Parcourir le fils gauche après avoir traité le fils droit
-  postfixeFilsDroit(node->left, tableau, i);
+ 
+  if (node->left != NULL)
+  {
+    postfixeFilsDroit(node->left, tableau, i);
+  }
+
+  
+  if (*i >= 10) 
+  {
+    return;
+  }
+
+
 
   tableau[*i].nbDepart = node->nbrDepart;
   tableau[*i].nbTrajets = node->nbrTrajets;

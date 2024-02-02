@@ -11,12 +11,6 @@
 int main(int argc, char *argv[]) {
     // d1 d2  -> nom_prog + chemin + d1 + d2
   int i =2;
-
-  printf("NOMBRE ARG : %d\n", argc);
-for (int y=0; y<argc; y++)
-  {
-    printf("ARG %d = %s\n", y, argv[y]);
-  }
   
   // Récupérer les arguments dans des varr globales ?
   char *chemin_csv = argv[1]; 
@@ -32,6 +26,7 @@ for (int y=0; y<argc; y++)
 
     if(strcmp(argv[i], "-s") == 0)
     {
+      printf("Traitement s en cours\n");
       traitement_s(chemin_csv);
     }
   }

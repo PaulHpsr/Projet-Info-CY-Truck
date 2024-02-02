@@ -244,15 +244,26 @@ void postfixeFilsDroitS(Node* node, TrajetFinal* tableau, int* i)
     return;
   }
 
-  //Parcourir tt les fils droit (plus grande valeure)
-  postfixeFilsDroitS(node->right, tableau, i);
+  if (node->right != NULL)
+  {
+    postfixeFilsDroitS(node->right, tableau, i);
+  }
 
   if (*i >= 49) 
   {
     return;
   }
-  //Pareil mais avec le fils gauche 
-  postfixeFilsDroitS(node->left, tableau, i);
+
+  
+  if (node->left != NULL)
+  {
+    postfixeFilsDroitS(node->left, tableau, i);
+  }
+  
+  if (*i >= 49) 
+  {
+    return;
+  }
 
   tableau[*i].id= node->id;
   tableau[*i].max = node->max;

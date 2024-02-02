@@ -279,8 +279,7 @@ shell_d1()
 
 start=$(date +%s)
 
-sort -n -t';' -k1 "$chemin_csv" | cut -d';' -f1,6 > "./temp/tmpD1.csv"
-awk -F';' '{count[$3 "" $2]++} END {for (i in count) printf "%s;%d\n", i, count[i]}' "./temp/tmpD1.csv" | sort -nr -t';' -k2,2 | head -n10 > "./temp/data_d1.dat"
+cut -d ';' -f1,6 "$chemin_csv" | sort -t ';' -k1,1 | uniq | cut -d ';' -f 2 | sort | uniq -c | sort -nr | head | awk '{print $2 ,$3 ";" $1}'  > "./temp/data_d1.dat"
 
 
 end=$(date +%s)
@@ -295,15 +294,13 @@ shell_d2()
 start=$(date +%s)
 
 
-sort -n -t';' -k6 "$chemin_csv" | cut -d';' -f6,5 > "./temp/tmpD2.csv"
-awk -F';' 'NR>1 {distances[$2]+=$1} END {for (driver in distances) print distances[driver]";", driver}' "./temp/tmpD2.csv" | sort -n -r -t';' -k1 | head -n10 > "./temp/data_d2_1.txt"
-awk -F';' '{temp=$1; $1=$2; $2=temp; printf "%s;%s\n", $1, $2}' "./temp/data_d2_1.txt" > "./temp/data_d2.dat"
+sort -n -t';' -k6 "$chemin_csv" | cut -d';' -f6,5 | awk -F';' 'NR>1 {distances[$2]+=$1} END {for (driver in distances) print distances[driver]";", driver}' | sort -n -r -t';' -k1 | head -n10 | awk -F';' '{temp=$1; $1=$2; $2=temp; printf "%s;%s\n", $1, $2}' > "./temp/data_d2.dat"
 
 
 
 end=$(date +%s)
 temps=$((end - start))
-echo "Durée d'exécution: -d1 ${temps} secondes"$'\n'
+echo "Durée d'exécution: -d2 ${temps} secondes"$'\n'
 
 }
 
@@ -313,14 +310,14 @@ shell_l()
 
 start=$(date +%s)
 
- cut -d';' -f1,5 "$chemin_csv" | sort -nr -t';' -k2,2  > "./temp/tmpL.csv"
-awk -F';' 'NR>1 {distances[$1]+=$2} END {for (id in distances) print id,";",distances[id]}' "./temp/tmpL.csv" | sort -n -r -t' ' -k2 | head -n10 > "./temp/data_l.dat"
+ cut -d';' -f1,5 "$chemin_csv" | awk -F ';' '{noms[$1]++; distances[$1]+=$2} END {for (nom in noms) print nom ";" distances[nom]}' | sort -t ';' -k2,2 -rn | head | sort -t ';' -k1,1 -n > "./temp/data_l.dat"
+
 
 
 
 end=$(date +%s)
 temps=$((end - start))
-echo "Durée d'exécution: -d1 ${temps} secondes"$'\n'
+echo "Durée d'exécution: -l ${temps} secondes"$'\n'
 
 }
 
@@ -435,6 +432,7 @@ EOF
 traitement_gnuplot_t()
 {
 sort -t';' -k1,1n "$script_dir/temp/data_t.txt" > "$script_dir/temp/data_t.dat"
+rm -r "./temp/data_t.txt"
 
 # Utilisation du fichier trié dans Gnuplot
 "$gnuplot_path" <<-EOF
@@ -472,9 +470,8 @@ traitement_gnuplot_s()
 
 
 # Tri du fichier
-sort -t';' -k5,5 -nr "$script_dir/temp/data_s.txt" | head -n50 > "$script_dir/temp/tempS.dat"
-awk '{print NR ";" $0}' "$script_dir/temp/tempS.dat" > "$script_dir/temp/data_s.dat"
-
+sort -t';' -k5,5 -nr "$script_dir/temp/data_s.txt" | head -n50 | awk '{print NR ";" $0}'  > "$script_dir/temp/data_s.dat"
+rm -r "./temp/data_s.txt"
 
 "$gnuplot_path" << EOF
 set terminal pngcairo enhanced font 'Arial,12' size 1500,1200
@@ -509,22 +506,23 @@ for i in "${option_traitement[@]}";
 do
     case "$i" in
         -d1)
-        echo "d1"
+        echo "Creation : graphique_d1.png ; Dans dossier : images...."$'\n'
            traitement_gnuplot_d1
             ;;
        -d2)
-       echo "d2"
+       echo "Creation : graphique_d2.png ; Dans dossier : images...."$'\n'
             traitement_gnuplot_d2
             ;;
         -l)
+        echo "Creation : graphique_l.png ; Dans dossier : images...."$'\n'
         traitement_gnuplot_l
            ;;
        -t)
-       echo "t"
+       echo "Creation : graphique_t.png ; Dans dossier : images...."$'\n'
            traitement_gnuplot_t
            ;;
        -s)
-       echo "s"
+       echo "Creation : graphique_s.png ; Dans dossier : images...."$'\n'
           traitement_gnuplot_s
            ;;
         \?)
@@ -566,6 +564,7 @@ echo "#-----------------------------------------------#"$'\n'
 existence_dossier
 verif_gnuplot_magick
 existence_executable
+retour=$?
 if [ $retour -eq 1 ]; then
   echo "ERREUR : Impossible de compiler le programme, veuillez vérifier"$'\n'
   exit 1
@@ -576,7 +575,8 @@ echo "#-----------------------------------------------#"$'\n'
 echo "EXECUTION DU PROGRAMME..."$'\n'
 echo "#-----------------------------------------------#"$'\n'
 
-
+traitement_t_effectue=false
+traitement_s_effectue=false
 
 for i in "${option_traitement[@]}";
 do
@@ -597,12 +597,20 @@ do
 
 
     -t)
-        time .""/progc/CY_Truck "${nom_csv}" "${option_traitement[@]}"
+        if [ "$traitement_t_effectue" = false ]; then
+        time ./progc/CY_Truck "${nom_csv}" "${option_traitement[@]}"
+        traitement_t_effectue=true
+        traitement_s_effectue=true
+        fi
         ;;
 
 
     -s)
-        time .""/progc/CY_Truck "${nom_csv}" "${option_traitement[@]}"
+        if [ "$traitement_s_effectue" = false ]; then
+        time ./progc/CY_Truck "${nom_csv}" "${option_traitement[@]}"
+        traitement_s_effectue=true
+        traitement_t_effectue=true
+        fi
         ;;
 
 
