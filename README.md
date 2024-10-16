@@ -1,4 +1,4 @@
-![Image d'en-tête](Cy_Truck en tete.png)
+![Image d'en-tête](Cy_Truck_image.png)
 # Projet Info CY Truck | Analyse et Visualisation de Données de Trajets Routiers
 
 ## Description
