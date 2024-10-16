@@ -63,7 +63,7 @@ Notre programme possède certaines limitations fonctionnelles :
 Le fichier CSV doit être structuré selon le format suivant : `Route ID;Step ID;Town A;Town B;Distance;Driver name`
 Le traitement avec l'option `-t` peut prendre beaucoup de temps.
 
-## Bibliogrpahie
+## Bibliographie
 
 - Williams, T., & Kelley, C. (2016). Gnuplot 5.0: An Interactive Plotting Program. Gnuplot development team. Disponible en ligne : [Documentation Gnuplot](http://www.gnuplot.info/documentation.html)
 
