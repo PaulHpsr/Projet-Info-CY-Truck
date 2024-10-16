@@ -56,8 +56,15 @@ Ce projet a été développé à l'aide des outils suivants :
 
 Pour finir, les graphiques générés par le programme seront stockés dans le dossier `images` du programme.
 
-##Limitations fonctionnelles
+
+## Limitations fonctionnelles
 Notre programme possède certaines limitations fonctionnelles :
 
 Le fichier CSV doit être structuré selon le format suivant : `Route ID;Step ID;Town A;Town B;Distance;Driver name`
 Le traitement avec l'option `-t` peut prendre beaucoup de temps.
+
+## Bibliogrpahie
+
+- Williams, T., & Kelley, C. (2016). Gnuplot 5.0: An Interactive Plotting Program. Gnuplot development team. Disponible en ligne : [Documentation Gnuplot](http://www.gnuplot.info/documentation.html)
+
+- Cooper, M. (2009). Advanced Bash-Scripting Guide: An in-depth exploration of the art of shell scripting. The Linux Documentation Project. Disponible en ligne : [Documentation Shell](http://tldp.org/LDP/abs/html/)
